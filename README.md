@@ -5,6 +5,8 @@
 ### Developed by Emeka Ugwuanyi ugwuanye@lsbu.ac.uk 
 
 ### Use instructions
+* change your docker root password
+* install sudo in your docker
 * prior to download add a new user in your linux with the following details:
 ** username: 'mec'
 ** password: 'password'
