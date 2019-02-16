@@ -15,7 +15,7 @@ from pyfiglet import Figlet
 
 # mec_list = ['10.1.1.1', '10.2.2.2', '10.3.3.3']
 
-cache_size = 4
+cache_size = 3
 H = 0
 M = 0
 MH = 0
@@ -346,7 +346,7 @@ def run_me():
 
     print("getting ready to start. . .")
 
-    time.sleep(5)
+    time.sleep(3)
     getting_ready()
     os.system('clear')
     g = Figlet(font='bubble')
