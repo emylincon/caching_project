@@ -10,6 +10,7 @@
 * prior to download add a new user in your linux with the following details:
 ** username: 'mec'
 ** password: 'password'
+* usermod -aG sudo mec
 * then clone the folder into the mec directory 
 * next,  change directory to ./caching_project and Run set_up.sh as sudo
 * start your ssh server
