@@ -5,7 +5,7 @@
 ## Developed by Emeka Ugwuanyi ugwuanye@lsbu.ac.uk 
 
 ## Use instructions
-* First Run the set_up.sh
+* First Run set_up.sh as sudo
 * make sure your ssh is running
 * you will require a web server
 
