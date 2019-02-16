@@ -21,6 +21,7 @@ apt install net-tools -y
 apt install nano -y
 apt install iperf3 -y
 apt install python3-numpy -y
+apt install nmap -y
 mv * ..
 clear
 echo 'All done.. Ready to use!'
