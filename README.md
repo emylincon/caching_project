@@ -2,7 +2,7 @@
 
 ### Please get proper permission before use
 
-### Developed by Emeka Ugwuanyi ugwuanye@lsbu.ac.uk 
+### @Author: Emeka Ugwuanyi ugwuanye@lsbu.ac.uk with contributions from Saptarshi Ghosh
 
 ### Docker Linux Use instructions
 #### Prior to Download
