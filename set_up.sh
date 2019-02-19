@@ -25,5 +25,6 @@ apt install nmap -y
 
 mv * ..
 python3 /home/mec/files_cache/refresh_db.py
+/etc/init.d/ssh start
 clear
 echo 'All done.. Ready to use!'
