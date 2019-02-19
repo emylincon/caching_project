@@ -45,3 +45,21 @@
 - number of requests (default is 30)
 - number of html contents (choose from 7 to 20). 7 is default
 * After each run; run the files_cache/refresh_db.py file to refresh the database and clean up residual files
+
+
+__________________________________________________
+apt update
+passwd
+password
+password
+apt install git sudo -y
+adduser mec
+password
+password
+usermod -aG sudo mec
+su - mec
+git clone https://github.com/emylincon/caching_project.git
+cd caching_project
+sudo bash set_up.sh
+password
+
