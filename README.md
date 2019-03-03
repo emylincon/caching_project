@@ -3,7 +3,8 @@
 ### Please get proper permission before use
 
 ### @Author: Emeka Ugwuanyi ugwuanye@lsbu.ac.uk with contributions from Saptarshi Ghosh
-
+### GNS3 Architecture
+![gns3 architecture](gns3_arch.png)
 ### Docker Linux Use instructions
 #### Prior to Download
 * change your docker root password
