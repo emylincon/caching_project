@@ -49,10 +49,11 @@
 
 
 __________________________________________________
-`apt update\  
-passwd\   
-password\   
-password\   
+```
+apt update  
+passwd   
+password   
+password   
 apt install git sudo -y  
 adduser mec  
 password  
@@ -62,7 +63,8 @@ su - mec
 git clone https://github.com/emylincon/caching_project.git  
 cd caching_project  
 sudo bash set_up.sh  
-password`  
+password
+```
 `
 Hello  
 World
