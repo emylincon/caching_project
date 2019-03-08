@@ -49,18 +49,18 @@
 
 
 __________________________________________________
-`apt update
-passwd
-password
-password
-apt install git sudo -y
-adduser mec
-password
-password
-usermod -aG sudo mec
-su - mec
-git clone https://github.com/emylincon/caching_project.git
-cd caching_project
-sudo bash set_up.sh
-password`
+`apt update  
+passwd  
+password  
+password  
+apt install git sudo -y  
+adduser mec  
+password  
+password  
+usermod -aG sudo mec  
+su - mec  
+git clone https://github.com/emylincon/caching_project.git  
+cd caching_project  
+sudo bash set_up.sh  
+password`  
 
