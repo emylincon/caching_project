@@ -64,6 +64,6 @@ cd caching_project
 sudo bash set_up.sh  
 password`  
 ```
-Hello<br/>
+Hello  
 World
 ```
