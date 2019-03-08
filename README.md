@@ -49,10 +49,10 @@
 
 
 __________________________________________________
-`apt update  
-passwd  
-password  
-password  
+`apt update\  
+passwd\   
+password\   
+password\   
 apt install git sudo -y  
 adduser mec  
 password  
