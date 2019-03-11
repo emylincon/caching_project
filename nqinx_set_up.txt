@@ -1,0 +1,23 @@
+sudo su
+apt update && apt upgrade -y
+
+wget https://nginx.org/keys/nginx_signing.key
+apt-key add nginx_signing.key
+
+apt edit-sources
+2
+deb http://nginx.org/packages/mainline/ubuntu/ xenial nginx
+deb-src http://nginx.org/packages/mainline/ubuntu/ xenial nginx
+
+apt-get update
+apt-get install -y nginx
+
+nginx -v
+
+ls /usr/share/nginx/html/      ## nginx websites folder
+
+ls /etc/nginx/conf.d/   ## configuration folder
+
+cat /etc/nginx/nginx.conf
+
+nginx -t         ## this checks if the configuration is okay
