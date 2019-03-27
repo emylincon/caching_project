@@ -10,9 +10,9 @@
 * change your docker root password
 * install sudo in your docker
 * add a new user in your linux with the following details:
-- username: mec
-- password: password
-* usermod -aG sudo mec
+- username: `mec`
+- password: `password`
+* `usermod -aG sudo mec`
 * then clone the folder into the mec directory 
 #### After Download 
 * Change directory to ./caching_project and Run set_up.sh as sudo
@@ -30,9 +30,9 @@
 ### Any other Linux device 
 * install sudo
 * add a new user in your linux with the following details:
-- username: mec
-- password: password
-* usermod -aG sudo mec
+- username: `mec`
+- password: `password`
+* `usermod -aG sudo mec`
 * then clone the folder into the mec directory 
 #### After Download 
 * Change directory to ./caching_project and Run set_up.sh as sudo
