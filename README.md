@@ -43,7 +43,7 @@
 * always run gui version as sudo
 * You will be required to put the following:
 - ip address of the webserver
-- number of requests (default is 30)
+- number of requests (default is 500)
 - number of html contents (choose from 7 to 20). 7 is default
 * After each run; run the files_cache/refresh_db.py file to refresh the database and clean up residual files
 
