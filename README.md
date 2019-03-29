@@ -1,6 +1,6 @@
 ## This is a property of London South Bank University licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
 
-### Please get proper permission before use
+### Please get permission before use
 
 ### @Author: Emeka Ugwuanyi ugwuanye@lsbu.ac.uk with contributions from Saptarshi Ghosh
 ### GNS3 Architecture
