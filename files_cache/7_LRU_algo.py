@@ -275,6 +275,7 @@ def cache_performance():
     global H
     global M
     global MH
+    global window_size
     global re_use
     p = int((H / request_no) * 100)
     q = int(((H+MH) / request_no) * 100)
@@ -287,6 +288,9 @@ def cache_performance():
     print('----------------------------------------------------------')
     print('         Total use of Replacement Algorithm = {}'.format(re_use))
     print('----------------------------------------------------------')
+    cmd = f"echo 'lru{cache_size}_local_hits = {H} \nlru{cache_size}_miss = {M} \nlru{cache_size}_mec_hit = {MH} \n" \
+          f"lru{cache_size}_total_hit = {H+MH}' >> /home/mec/cache_result.py"
+    os.system(cmd)
 
 
 def getting_ready():
