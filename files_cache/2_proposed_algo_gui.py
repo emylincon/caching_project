@@ -557,6 +557,9 @@ def cache_performance():
     print('----------------------------------------------------------')
     print('         Total use of Replacement Algorithm = {}'.format(re_use))
     print('----------------------------------------------------------')
+    cmd = f"echo 'p{cache_size}_local_hits = {H} \np{cache_size}_miss = {M} \np{cache_size}_mec_hit = {MH} \n" \
+          f"p{cache_size}_total_hit = {H+MH}' >> /home/mec/cache_result.py"
+    os.system(cmd)
 
 
 def getting_ready():
@@ -645,12 +648,8 @@ def run_me():
             print(freq)
             cache_performance()
             os.system('rm /home/mec/temp/*')
-            print('\n-----------------------------------------')
-            print('RTT plot = {}'.format(calculate_mov_avg(x_axis)))
-            print('\n-----------------------------------------')
-            print('\n-----------------------------------------')
-            print('CPU plot = {}'.format(calculate_mov_avg(y_axis)))
-            print('\n-----------------------------------------')
+            cmd = f"echo 'p{cache_size}_rtt = {calculate_mov_avg(x_axis)} \np{cache_size}_cpu = {calculate_mov_avg(y_axis)}' >> /home/mec/cache_result.py"
+            os.system(cmd)
             break
         else:
             mec_str = ''
