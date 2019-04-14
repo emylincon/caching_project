@@ -669,7 +669,7 @@ def run_me():
             print(freq)
             cache_performance()
             os.system('rm /home/mec/temp/*')
-            cmd = f"echo 'p{cache_size}_rtt = {calculate_mov_avg(x_axis)} \np{cache_size}_cpu = {calculate_mov_avg(y_axis)}' >> /home/mec/cache_result.py"
+            cmd = f"echo 'lfu{cache_size}_rtt = {calculate_mov_avg(x_axis)} \nlfu{cache_size}_cpu = {calculate_mov_avg(y_axis)}' >> /home/mec/cache_result.py"
             os.system(cmd)
             break
         else:
