@@ -577,8 +577,8 @@ def cache_performance():
     print('----------------------------------------------------------')
     print('         Total use of Replacement Algorithm = {}'.format(re_use))
     print('----------------------------------------------------------')
-    cmd = f"echo 'lfu{cache_size}_local_hits = {H} \nlfu{cache_size}_miss = {M} \nlfu{cache_size}_mec_hit = {MH} \n" \
-          f"lfu{cache_size}_total_hit = {H+MH}' >> /home/mec/cache_result.py"
+    cmd = "echo 'lfu{}_local_hits = {} \nlfu{}_miss = {} \nlfu{}_mec_hit = {} \n" \
+          "lfu{}_total_hit = {}' >> /home/mec/cache_result.py".format(cache_size, H, cache_size, M, cache_size, MH, cache_size, H+MH)
     os.system(cmd)
 
 
@@ -669,7 +669,7 @@ def run_me():
             print(freq)
             cache_performance()
             os.system('rm /home/mec/temp/*')
-            cmd = f"echo 'lfu{cache_size}_rtt = {calculate_mov_avg(x_axis)} \nlfu{cache_size}_cpu = {calculate_mov_avg(y_axis)}' >> /home/mec/cache_result.py"
+            cmd = "echo 'lfu{}_rtt = {} \nlfu{}_cpu = {}' >> /home/mec/cache_result.py".format(cache_size, calculate_mov_avg(x_axis), cache_size, calculate_mov_avg(y_axis))
             os.system(cmd)
             break
         else:
