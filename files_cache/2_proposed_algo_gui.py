@@ -558,7 +558,7 @@ def cache_performance():
     print('         Total use of Replacement Algorithm = {}'.format(re_use))
     print('----------------------------------------------------------')
     cmd = "echo 'p{}_local_hits = {} \np{}_miss = {} \np{}_mec_hit = {} \n" \
-          "p{}_total_hit = {}' >> cache_result.py".format(cache_size, H, cache_size, M, cache_size, MH, cache_size, H+MH)
+          "p{}_total_hit = {}' >> /home/mec/cache_result.py".format(cache_size, H, cache_size, M, cache_size, MH, cache_size, H+MH)
     os.system(cmd)
 
 
