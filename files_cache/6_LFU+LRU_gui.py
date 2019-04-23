@@ -627,8 +627,8 @@ def cache_performance():
     print('----------------------------------------------------------')
     print('         Total use of Replacement Algorithm = {}'.format(re_use))
     print('----------------------------------------------------------')
-    cmd = f"echo 'lfru{}_local_hits = {} \nlfru{}_miss = {} \nlfru{}_mec_hit = {} \n" \
-          f"lfru{}_total_hit = {}' >> /home/mec/cache_result.py".format(cache_size, H, cache_size, M, cache_size, MH, cache_size, H+MH)
+    cmd = "echo 'lfru{}_local_hits = {} \nlfru{}_miss = {} \nlfru{}_mec_hit = {} \n" \
+          "lfru{}_total_hit = {}' >> /home/mec/cache_result.py".format(cache_size, H, cache_size, M, cache_size, MH, cache_size, H+MH)
     os.system(cmd)
 
 
