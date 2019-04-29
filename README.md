@@ -2,7 +2,7 @@
 
 ### Please get permission before use
 
-### @Author: Emeka Ugwuanyi ugwuanye@lsbu.ac.uk with contributions from Saptarshi Ghosh
+### @Author: Emeka Emmanuel Ugwuanyi ugwuanye@lsbu.ac.uk with contributions from Saptarshi Ghosh
 ### GNS3 Architecture
 ![gns3 architecture](gns3_arch.png)
 ### Docker Linux Use instructions
