@@ -166,11 +166,11 @@ def plot_local_cache_freq():
             if key in local_cache_frequency():
                 ax3.plot(plot_dic[key], linewidth=5, label=key, color=colour[key])
 
-            ax3.set_title('Local Cache frequency Graph')
-            ax3.set_ylabel('URL')
-            ax3.set_xlabel('Time (seconds)')
-            ax3.legend()
-            plt.subplot(ax3)
+        ax3.set_title('Local Cache frequency Graph')
+        ax3.set_ylabel('URL')
+        ax3.set_xlabel('Time (seconds)')
+        ax3.legend()
+        plt.subplot(ax3)
 
 
 def hash_to_web():
@@ -742,9 +742,8 @@ def cache_loop():
 
 def start_program():
     h1 = Thread(target=cache_loop)
-    h1.start()
-    time.sleep(2)
     h2 = Thread(target=plotting)
+    h1.start()
     h2.start()
 
 
