@@ -181,7 +181,7 @@ def plot_local_cache_freq():
     else:
         for key in changing_freq.keys():
             if key in local_cache_frequency():
-                ax3.plot(changing_freq[key], linewidth=5, label=hash_web[key].split('/')[1], color=colour[key])
+                ax3.plot(changing_freq[key], linewidth=5, label=hash_web[key].split('/')[1], color=hash_colour[key])
 
         ax3.set_title('Local Cache frequency Graph')
         ax3.set_ylabel('URL')
