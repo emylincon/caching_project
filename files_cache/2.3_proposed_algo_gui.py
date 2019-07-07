@@ -97,7 +97,7 @@ def plot_performance():
     values = [H, M, (H + MH), re_use]
     ax1.set_xticks(ypos)
     ax1.set_xticklabels(name)
-    ax1.bar(ypos, values, align='center', color='m')
+    ax1.bar(ypos, values, align='center', color='m', alpha=0.5)
     ax1.set_title('Cache Performance')
     plt.subplot(ax1)
 
@@ -144,7 +144,7 @@ def calculate_mov_avg(a1):
 
 def scale_axis(_list):
     mv = calculate_mov_avg(_list)
-    pty = mv[0:len(mv):int((len(mv) / 7)) + 1]
+    pty = mv[0:len(mv):int((len(mv) / 10)) + 1]
     if pty[-1] != mv[-1]:
         pty.append(mv[-1])
     ptx = [mv.index(i) for i in pty]
@@ -154,9 +154,10 @@ def scale_axis(_list):
 
 def plot_resource_util():
     ax3.grid(True)
-
-    ax3.plot(calculate_mov_avg(x_axis), linewidth=2, label='RTT')
-    ax3.plot(calculate_mov_avg(y_axis), linewidth=2, label='CPU')
+    rx, ry = scale_axis(x_axis)
+    cx, cy = scale_axis(y_axis)
+    ax3.plot(rx, ry, 'g--^', linewidth=2, label='RTT', alpha=0.5)
+    ax3.plot(cx, cy, 'b-.s', linewidth=2, label='CPU', alpha=0.5)
     ax3.set_title('CPU and RTT Utilization over Time')
     ax3.set_ylabel('CPU and RTT')
     ax3.set_xlabel('Time (seconds)')
