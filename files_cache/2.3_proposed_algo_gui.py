@@ -143,7 +143,7 @@ def calculate_mov_avg(a1):
 
 
 def plot_resource_util():
-    ax3.grid(True, color='k')
+    ax3.grid(True)
     ax3.plot(calculate_mov_avg(x_axis), linewidth=5, label='RTT')
     ax3.plot(calculate_mov_avg(y_axis), linewidth=5, label='CPU')
     ax3.set_title('CPU and RTT Utilization over Time')
