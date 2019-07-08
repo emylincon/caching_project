@@ -6,7 +6,7 @@
 ### GNS3 Architecture
 ![gns3 architecture](gns3_arch.png)
 ### Docker Linux Use instructions
-#### Prior to Download
+#### Prior to Package Download
 * change your docker root password
 * install sudo in your docker
 * add a new user in your linux with the following details:
