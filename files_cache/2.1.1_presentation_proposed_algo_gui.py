@@ -165,8 +165,10 @@ def cpu_rtt():
     next_t = psutil.cpu_percent(percpu=False)
     delta = abs(prev_t - next_t)
     prev_t = next_t
-    x_axis.append(rtt)
-    y_axis.append(delta)
+    if str(type(rtt)) == "<class 'float'>":
+        x_axis.append(rtt)
+    if str(type(delta)) == "<class 'float'>":
+        y_axis.append(delta)
 
 
 def update_changing_freq():
@@ -228,11 +230,20 @@ def plot_relative_frequency():
 
 def calc_relative_freq(x):
     global freq
+    global window_size
 
-    if x in freq:
-        freq[x] += 1
+    window_size += 1
+    alpha = 1 / window_size
+    delta = alpha / (len(freq) + 1)
+    if x not in freq.keys():
+        for k in freq.keys():
+            freq[k] -= delta
+        freq[x] = alpha
     else:
-        freq[x] = 1
+        for k in freq.keys():
+            if k != x:
+                freq[k] -= delta
+        freq[x] += (len(freq) - 1) * delta
 
     update_changing_freq()
     cpu_rtt()
