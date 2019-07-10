@@ -148,7 +148,7 @@ def plot_local_cache_freq():
 def plot_cpu():
     ax2.grid(True)
     cx, cy = scale_axis(y_axis)
-    ax2.plot(cx, cy, linewidth=2, label='CPU', color='b', linestyle='dashed', alpha=0.5)
+    ax2.plot(cx, cy, linewidth=2, label='CPU', linestyle='dashed', alpha=0.5)
     ax2.set_title('CPU Utilization over Time')
     ax2.set_ylabel('URL')
     ax2.fill_between(cx, cy, 0, alpha=0.5)
