@@ -135,7 +135,7 @@ def plot_local_cache_freq():
         plt.subplot(ax3)
 
 
-def plot_changing_freq():
+def plot_cpu():
     global changing_freq
 
     ax2.grid(True, color='k')
@@ -150,9 +150,9 @@ def plot_changing_freq():
 
 
 def plot_graphs():
-    plot_resource_util()
+    plot_rtt()
     plot_relative_frequency()
-    plot_changing_freq()
+    plot_cpu()
     plot_local_cache_freq()
     plot_performance()
     fig.suptitle('Cache Performance Results')
@@ -193,7 +193,7 @@ def calculate_mov_avg(a1):
     return ma1
 
 
-def plot_resource_util():
+def plot_rtt():
     ax4.grid(True, color='k')
     ax4.plot(calculate_mov_avg(x_axis), linewidth=5, label='RTT')
     ax4.plot(calculate_mov_avg(y_axis), linewidth=5, label='CPU')
