@@ -204,9 +204,9 @@ def calculate_mov_avg(a1):
 
 
 def plot_rtt():
-    ax4.grid(True, color='k')
-    ax4.plot(calculate_mov_avg(x_axis), linewidth=5, label='RTT')
-    ax4.plot(calculate_mov_avg(y_axis), linewidth=5, label='CPU')
+    ax4.grid(True)
+    rx, ry = scale_axis(x_axis)
+    ax4.plot(rx, ry, 'g--^', linewidth=2, label='RTT', alpha=0.5)
     ax4.set_title('CPU and RTT Utilization over Time')
     ax4.set_ylabel('CPU and RTT')
     ax4.set_xlabel('Time (seconds)')
