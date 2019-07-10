@@ -119,14 +119,24 @@ def local_cache_frequency():
 
 def plot_local_cache_freq():
     global changing_freq
-
+    mark = ['o', '*', '>', '+']
     ax3.grid(True, color='k')
     if local_cache_frequency() == 'no items':
         pass
     else:
+        i = 0
         for key in changing_freq.keys():
             if key in local_cache_frequency():
-                ax3.plot(changing_freq[key], linewidth=5, label=hash_web[key].split('/')[1], color=hash_colour[key])
+                px, py = scale_axis(changing_freq[key])
+                ax3.plot(px,
+                         py,
+                         linewidth=2,
+                         linestyle='dashed',
+                         marker=mark[i],
+                         label=hash_web[key].split('/')[1],
+                         color=hash_colour[key],
+                         alpha=0.5)
+                i += 1
 
         ax3.set_title('Local Cache frequency Graph')
         ax3.set_ylabel('URL')
@@ -232,7 +242,7 @@ def plot_relative_frequency():
         else:
             explode.append(0)
 
-    ax5.pie(val, labels=keys, autopct='%.3f%%', shadow=True, explode=explode, colors=cols)
+    ax5.pie(val, labels=keys, radius=1.5, shadow=True, explode=explode, colors=cols)
     ax5.set_title('Relative Frequency')
     plt.subplot(ax5)
 
