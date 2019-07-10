@@ -39,6 +39,7 @@ changing_freq = {}  # {hash: frequency}
 hash_times = {}
 window = []
 window_size = cache_size * 8
+_window_size = 0
 
 x_axis = []
 y_axis = []
@@ -247,10 +248,10 @@ def plot_relative_frequency():
 
 def calc_relative_freq(x):
     global freq
-    global window_size
+    global _window_size
 
-    window_size += 1
-    alpha = 1 / window_size
+    _window_size += 1
+    alpha = 1 / _window_size
     delta = alpha / (len(freq) + 1)
     if x not in freq.keys():
         for k in freq.keys():
