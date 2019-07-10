@@ -84,7 +84,7 @@ def plot_performance():
     values = [H, M, (H + MH), re_use]
     ax1.set_xticks(ypos)
     ax1.set_xticklabels(name)
-    ax1.bar(ypos, values, align='center', color='b', alpha=0.5)
+    ax1.bar(ypos, values, align='center', color='g', alpha=0.5)
     ax1.set_title('Cache Performance')
     plt.subplot(ax1)
 
@@ -135,7 +135,7 @@ def plot_local_cache_freq():
                          marker=mark[i],
                          label=hash_web[key].split('/')[1],
                          color=hash_colour[key],
-                         alpha=0.1)
+                         alpha=0.8)
                 i += 1
 
         ax3.set_title('Local Cache frequency Graph')
@@ -148,7 +148,7 @@ def plot_local_cache_freq():
 def plot_cpu():
     ax2.grid(True)
     cx, cy = scale_axis(y_axis)
-    ax2.plot(cx, cy, linewidth=2, label='CPU', color='g', linestyle='dashed', alpha=0.5)
+    ax2.plot(cx, cy, linewidth=2, label='CPU', color='b', linestyle='dashed', alpha=0.5)
     ax2.set_title('CPU Utilization over Time')
     ax2.set_ylabel('URL')
     ax2.fill_between(cx, cy, 0, alpha=0.5)
@@ -240,7 +240,7 @@ def plot_relative_frequency():
         else:
             explode.append(0)
 
-    ax5.pie(val, labels=keys, shadow=True, explode=explode, colors=cols)
+    ax5.pie(val, labels=keys, autopct='%.3f%%', shadow=True, explode=explode, colors=cols)
     ax5.set_title('Relative Frequency')
     plt.subplot(ax5)
 
