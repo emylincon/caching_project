@@ -84,7 +84,7 @@ def plot_performance():
     values = [H, M, (H + MH), re_use]
     ax1.set_xticks(ypos)
     ax1.set_xticklabels(name)
-    ax1.bar(ypos, values, align='center', color='b')
+    ax1.bar(ypos, values, align='center', color='b', alpha=0.5)
     ax1.set_title('Cache Performance')
     plt.subplot(ax1)
 
@@ -151,7 +151,6 @@ def plot_cpu():
     ax2.plot(cx, cy, linewidth=2, label='CPU', alpha=0.5)
     ax2.set_title('CPU Utilization over Time')
     ax2.set_ylabel('URL')
-    ax2.set_xlabel('Time (seconds)')
     ax2.fill_between(cx, cy, 0, alpha=0.5)
     ax2.legend()
     plt.subplot(ax2)
