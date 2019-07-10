@@ -149,6 +149,16 @@ def plot_cpu():
     plt.subplot(ax2)
 
 
+def scale_axis(_list):
+    mv = calculate_mov_avg(_list)
+    pty = mv[0:len(mv):int((len(mv) / 10)) + 1]
+    if pty[-1] != mv[-1]:
+        pty.append(mv[-1])
+    ptx = [mv.index(i) for i in pty]
+
+    return ptx, pty
+
+
 def plot_graphs():
     plot_rtt()
     plot_relative_frequency()
