@@ -241,27 +241,19 @@ def plot_relative_frequency():
         else:
             explode.append(0)
 
-    ax5.pie(val, labels=keys, autopct='%.3f%%', shadow=True, explode=explode, colors=cols)
+    ax5.pie(val, labels=keys, shadow=True, explode=explode, colors=cols)
     ax5.set_title('Relative Frequency')
     plt.subplot(ax5)
 
 
 def calc_relative_freq(x):
     global freq
-    global _window_size
+    global freq
 
-    _window_size += 1
-    alpha = 1 / _window_size
-    delta = alpha / (len(freq) + 1)
-    if x not in freq.keys():
-        for k in freq.keys():
-            freq[k] -= delta
-        freq[x] = alpha
+    if x in freq:
+        freq[x] += 1
     else:
-        for k in freq.keys():
-            if k != x:
-                freq[k] -= delta
-        freq[x] += (len(freq) - 1) * delta
+        freq[x] = 1
 
     update_changing_freq()
     cpu_rtt()
