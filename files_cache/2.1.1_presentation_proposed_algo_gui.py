@@ -136,15 +136,13 @@ def plot_local_cache_freq():
 
 
 def plot_cpu():
-    global changing_freq
-
-    ax2.grid(True, color='k')
-    for key in changing_freq.keys():
-        ax2.plot(changing_freq[key], linewidth=5, label=hash_web[key].split('/')[1], color=hash_colour[key])
-
-    ax2.set_title('Changing frequency Graph')
+    ax2.grid(True)
+    cx, cy = scale_axis(y_axis)
+    ax2.plot(cx, cy, linewidth=2, label='CPU', alpha=0.5)
+    ax2.set_title('CPU Utilization over Time')
     ax2.set_ylabel('URL')
     ax2.set_xlabel('Time (seconds)')
+    ax2.fill_between(cx, cy, 0, alpha=0.5)
     ax2.legend()
     plt.subplot(ax2)
 
@@ -206,10 +204,11 @@ def calculate_mov_avg(a1):
 def plot_rtt():
     ax4.grid(True)
     rx, ry = scale_axis(x_axis)
-    ax4.plot(rx, ry, 'g--^', linewidth=2, label='RTT', alpha=0.5)
+    ax4.plot(rx, ry, linewidth=2, label='RTT', alpha=0.5)
     ax4.set_title('CPU and RTT Utilization over Time')
     ax4.set_ylabel('CPU and RTT')
     ax4.set_xlabel('Time (seconds)')
+    ax4.fill_between(rx, ry, 0, alpha=0.5)
     ax4.legend()
     plt.subplot(ax4)
 
