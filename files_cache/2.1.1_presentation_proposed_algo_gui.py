@@ -84,7 +84,7 @@ def plot_performance():
     values = [H, M, (H + MH), re_use]
     ax1.set_xticks(ypos)
     ax1.set_xticklabels(name)
-    ax1.bar(ypos, values, align='center', color='m')
+    ax1.bar(ypos, values, align='center', color='b')
     ax1.set_title('Cache Performance')
     plt.subplot(ax1)
 
@@ -120,7 +120,7 @@ def local_cache_frequency():
 def plot_local_cache_freq():
     global changing_freq
     mark = ['o', '*', '>', '+']
-    ax3.grid(True, color='k')
+    ax3.grid(True)
     if local_cache_frequency() == 'no items':
         pass
     else:
@@ -135,7 +135,7 @@ def plot_local_cache_freq():
                          marker=mark[i],
                          label=hash_web[key].split('/')[1],
                          color=hash_colour[key],
-                         alpha=0.5)
+                         alpha=0.1)
                 i += 1
 
         ax3.set_title('Local Cache frequency Graph')
@@ -242,7 +242,7 @@ def plot_relative_frequency():
         else:
             explode.append(0)
 
-    ax5.pie(val, labels=keys, radius=1.5, shadow=True, explode=explode, colors=cols)
+    ax5.pie(val, labels=keys, shadow=True, explode=explode, colors=cols)
     ax5.set_title('Relative Frequency')
     plt.subplot(ax5)
 
