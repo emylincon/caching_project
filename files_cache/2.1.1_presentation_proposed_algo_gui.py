@@ -82,7 +82,9 @@ def get_rtt(host):
 
 def get_mec_rtts():
     for i in mec_rtt:
-        mec_rtt[i].append(get_rtt(i))
+        _rt = get_rtt(i)
+        if str(type(_rt)) == "<class 'float'>":
+            mec_rtt[i].append(_rt)
 
 
 def plot_performance():
