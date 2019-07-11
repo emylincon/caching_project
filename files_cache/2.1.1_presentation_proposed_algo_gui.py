@@ -248,7 +248,6 @@ def plot_relative_frequency():
 
 def calc_relative_freq(x):
     global freq
-    global freq
 
     if x in freq:
         freq[x] += 1
