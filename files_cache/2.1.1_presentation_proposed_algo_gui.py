@@ -40,7 +40,7 @@ hash_times = {}
 window = []
 window_size = cache_size * 8
 _window_size = 0
-
+mec_rtt = {}               # {name: [RTT]}
 x_axis = []
 y_axis = []
 
@@ -72,6 +72,17 @@ def make_hash_dic(host_ip, n):
         h_dic[url] = hash_no
         col[url] = kolour[i-1]
     return [h_dic, col]
+
+
+def get_rtt(host):
+    rtt = pc.verbose_ping(host)
+
+    return rtt
+
+
+def get_mec_rtts():
+    for i in mec_rtt:
+        mec_rtt[i].append(get_rtt(i))
 
 
 def plot_performance():
@@ -209,11 +220,21 @@ def calculate_mov_avg(a1):
         # μ_n=((n-1) μ_(n-1)  + x_n)/n
     return ma1
 
-style = ['g--^', 'r:o', 'b-.s', 'm--*', 'k-.>']
+style = ['r:o', 'b-.s', 'm--*', 'k-.>']
 def plot_rtt():
     ax4.grid(True)
     rx, ry = scale_axis(x_axis)
-    ax4.plot(rx, ry, linewidth=2, label='RTT', color='r', linestyle='dashed', marker='>', alpha=0.5)
+    j = 0
+    for i in mec_rtt:
+        mv = calculate_mov_avg(mec_rtt[i])
+        mx, my = scale_axis(mv)
+        ax4.plot(mx,
+                 my,
+                 style[j],
+                 linewidth=2,
+                 label=i)
+        j += 1
+    ax4.plot(rx, ry, 'g--^', linewidth=2, label='RTT')
     ax4.set_title('RTT Delay')
     ax4.set_ylabel('RTT')
     ax4.set_xlabel('Time (seconds)')
@@ -740,6 +761,7 @@ def run_me():
     global server_ip
     global request_no
     global colour
+    global mec_rtt
 
     os.system('clear')
     server_ip = input('web server ip: ')
@@ -782,6 +804,8 @@ def run_me():
                 mec_str += i[0:-1] + ','
             mec = '{' + mec_str[0:-1] + '}'
             mec_list = ast.literal_eval(mec)
+            for i in mec_list:
+                mec_rtt[i] = []
             '''
             for i in range(30):
                 fr = open('/home/mec/temp/web_test.txt', 'r')
