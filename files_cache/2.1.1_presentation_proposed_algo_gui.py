@@ -135,8 +135,7 @@ def plot_local_cache_freq():
                          linestyle='dashed',
                          marker=mark[i],
                          label=hash_web[key].split('/')[1],
-                         color=hash_colour[key],
-                         alpha=0.8)
+                         color=hash_colour[key])
                 i += 1
 
         ax3.set_title('Local Cache frequency Graph')
@@ -210,7 +209,7 @@ def calculate_mov_avg(a1):
         # μ_n=((n-1) μ_(n-1)  + x_n)/n
     return ma1
 
-
+style = ['g--^', 'r:o', 'b-.s', 'm--*', 'k-.>']
 def plot_rtt():
     ax4.grid(True)
     rx, ry = scale_axis(x_axis)
