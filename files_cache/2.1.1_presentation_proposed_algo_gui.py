@@ -390,18 +390,21 @@ def update_local_database(hash_no):
 
 
 def update_mec_database(hash_no, path, cache_time, host_ip):
-    for i in mec_list:
-        c = paramiko.SSHClient()
+    try:
+        for i in mec_list:
+            c = paramiko.SSHClient()
 
-        un = 'mec'
-        pw = 'password'
-        port = 22
+            un = 'mec'
+            pw = 'password'
+            port = 22
 
-        c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        c.connect(mec_list[i], port, un, pw)
-        cmd = 'python3 /home/mec/files_cache/db_manage.py insert "{}" "{}" "{}" "{}"'.format(hash_no, path, cache_time, host_ip)
+            c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            c.connect(mec_list[i], port, un, pw)
+            cmd = 'python3 /home/mec/files_cache/db_manage.py insert "{}" "{}" "{}" "{}"'.format(hash_no, path, cache_time, host_ip)
 
-        stdin, stdout, stderr = c.exec_command(cmd)
+            stdin, stdout, stderr = c.exec_command(cmd)
+    except Exception as e:
+        print(e)
 
 
 def fetch_from_cache(hash_no):
