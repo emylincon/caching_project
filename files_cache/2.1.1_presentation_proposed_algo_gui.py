@@ -81,8 +81,8 @@ def get_rtt(host):
 
 
 def get_mec_rtts():
-    for i in mec_rtt:
-        _rt = get_rtt(i)
+    for i in mec_list:
+        _rt = get_rtt(mec_list[i])
         if str(type(_rt)) == "<class 'float'>":
             mec_rtt[i].append(_rt)
 
@@ -236,7 +236,7 @@ def plot_rtt():
                  linewidth=2,
                  label=i)
         j += 1
-    ax4.plot(rx, ry, 'g--^', linewidth=2, label='RTT')
+    ax4.plot(rx, ry, 'g--^', linewidth=2, label='Cloud')
     ax4.set_title('RTT Delay')
     ax4.set_ylabel('RTT')
     ax4.set_xlabel('Time (seconds)')
