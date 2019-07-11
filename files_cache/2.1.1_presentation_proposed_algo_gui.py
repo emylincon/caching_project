@@ -197,6 +197,7 @@ def cpu_rtt():
         x_axis.append(rtt)
     if str(type(delta)) == "<class 'float'>":
         y_axis.append(delta)
+    get_mec_rtts()
 
 
 def update_changing_freq():
@@ -226,8 +227,7 @@ def plot_rtt():
     rx, ry = scale_axis(x_axis)
     j = 0
     for i in mec_rtt:
-        mv = calculate_mov_avg(mec_rtt[i])
-        mx, my = scale_axis(mv)
+        mx, my = scale_axis(mec_rtt[i])
         ax4.plot(mx,
                  my,
                  style[j],
