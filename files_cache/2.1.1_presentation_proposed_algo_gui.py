@@ -321,10 +321,13 @@ def get_time():
 
 
 def ip_address():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    return s.getsockname()[0]
-
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        return s.getsockname()[0]
+    except Exception as e:
+        print(e)
+        return '127.0.0.1'
 
 def check_cache(hash_no, url):
     try:
