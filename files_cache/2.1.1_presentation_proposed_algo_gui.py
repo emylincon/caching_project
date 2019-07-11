@@ -807,7 +807,7 @@ def run_me():
             mec = '{' + mec_str[0:-1] + '}'
             mec_list = ast.literal_eval(mec)
             for i in mec_list:
-                mec_rtt[i] = []
+                mec_rtt[i] = [0]
 
             for i in range(500):
                 fr = open('/home/mec/temp/web_test.txt', 'r')
