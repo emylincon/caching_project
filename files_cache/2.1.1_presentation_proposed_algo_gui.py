@@ -806,14 +806,14 @@ def run_me():
             mec_list = ast.literal_eval(mec)
             for i in mec_list:
                 mec_rtt[i] = []
-            '''
-            for i in range(30):
+
+            for i in range(500):
                 fr = open('/home/mec/temp/web_test.txt', 'r')
                 t = fr.readlines()
                 v = random.randint(0, (len(t) - 1))
                 get_hash(t[v][0:-1])
                 fr.close()
-                time.sleep(3)
+                time.sleep(1)
             '''
 
             for v in ref:
@@ -823,6 +823,7 @@ def run_me():
                 get_hash(t[v][0:-1])
                 fr.close()
                 time.sleep(1)
+            '''
 
 
 def main():
