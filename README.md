@@ -47,7 +47,9 @@
 - number of html contents (choose from 7 to 20). 7 is default
 * After each run; run the files_cache/refresh_db.py file to refresh the database and clean up residual files
 
-
+### Note
+* if you run a script with an ssh tag on an mec, all other mecs shoudl also run an ssh tag script
+* likewise if you run a script with a multicast tag all other mecs should also run a multicast tag script
 __________________________________________________
 #### SET UP Commands
 ```
