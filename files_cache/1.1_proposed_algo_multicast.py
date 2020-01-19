@@ -658,9 +658,9 @@ def main():
     run_me()
 
 
-'''
+
 if __name__ == "__main__":
     main()
-'''
 
-zipf_dist(500, 20)
+
+#zipf_dist(500, 20)
