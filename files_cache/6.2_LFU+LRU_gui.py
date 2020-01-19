@@ -18,7 +18,6 @@ import ast
 from pyfiglet import Figlet
 import numpy
 
-
 __author__ = 'Emeka'
 cache_size = 4
 H = 0  # hit counter
@@ -26,11 +25,12 @@ M = 0  # miss counter
 MH = 0  # cooperative hit counter
 re_use = 0  # replacement algorithm use counter
 # ref = [5, 0, 5, 3, 6, 0, 4, 1, 3, 5, 5, 6, 0, 5, 5, 2, 6, 5, 2, 6, 4, 1, 4, 4, 5, 6, 0, 3, 2, 6]
-#ref = [14, 14, 7, 0, 15, 15, 5, 18, 7, 14, 8, 17, 10, 14, 10, 16, 17, 12, 16, 0, 4, 10, 1, 12, 4, 5, 7, 6, 14, 19, 18, 7, 10, 19, 5, 13, 8, 14, 10, 16, 10, 0, 0, 13, 2, 4, 9, 17, 14, 10, 10, 5, 19, 11, 0, 16, 8, 10, 19, 8, 8, 18, 13, 16, 16, 10, 7, 11, 15, 6, 19, 7, 6, 1, 10, 15, 1, 14, 13, 4, 5, 5, 9, 2, 5, 6, 14, 15, 11, 15, 7, 0, 4, 7, 0, 12, 7, 10, 13, 6, 16, 7, 14, 17, 6, 0, 12, 11, 12, 15, 12, 16, 9, 7, 13, 12, 10, 11, 9, 4, 6, 2, 15, 15, 3, 7, 15, 19, 4, 7, 14, 14, 0, 12, 4, 13, 14, 6, 7, 16, 6, 4, 16, 3, 15, 15, 9, 1, 5, 7, 15, 17, 4, 1, 15, 17, 18, 17, 5, 0, 16, 11, 10, 14, 6, 18, 5, 4, 17, 1, 15, 4, 10, 19, 19, 2, 7, 4, 3, 8, 15, 1, 2, 9, 8, 10, 17, 1, 12, 3, 2, 11, 14, 19, 16, 19, 4, 6, 13, 12, 13, 12, 3, 10, 7, 13, 12, 12, 8, 3, 3, 4, 7, 5, 7, 2, 0, 16, 1, 2, 7, 12, 10, 8, 16, 3, 10, 17, 11, 8, 10, 1, 18, 10, 0, 11, 12, 18, 8, 13, 6, 19, 0, 12, 18, 10, 9, 8, 10, 4, 1, 10, 15, 16, 11, 12, 6, 0, 12, 14, 18, 7, 1, 12, 4, 19, 0, 17, 3, 17, 7, 15, 3, 14, 6, 12, 6, 12, 19, 0, 10, 17, 14, 5, 9, 17, 18, 14, 6, 19, 9, 12, 12, 7, 0, 6, 11, 1, 7, 15, 4, 9, 14, 18, 10, 5, 15, 18, 11, 7, 19, 4, 11, 13, 4, 12, 1, 5, 5, 7, 9, 4, 18, 14, 4, 11, 5, 13, 5, 4, 13, 15, 15, 0, 1, 1, 14, 14, 6, 18, 9, 14, 15, 1, 5, 3, 17, 6, 0, 8, 9, 13, 13, 1, 4, 7, 10, 0, 12, 16, 18, 3, 1, 1, 18, 6, 1, 10, 8, 13, 16, 6, 15, 8, 2, 1, 10, 4, 7, 11, 13, 7, 9, 12, 9, 11, 10, 8, 11, 0, 3, 3, 14, 8, 15, 1, 15, 11, 19, 15, 14, 13, 5, 1, 16, 3, 17, 18, 16, 15, 13, 0, 11, 6, 10, 18, 16, 18, 6, 7, 16, 13, 6, 2, 0, 6, 6, 2, 9, 4, 12, 9, 10, 11, 18, 6, 11, 19, 14, 9, 9, 5, 8, 6, 1, 6, 19, 15, 7, 1, 9, 5, 13, 6, 12, 13, 19, 8, 14, 9, 0, 13, 8, 7, 13, 11, 11, 12, 8, 9, 3, 12, 7, 1, 4, 8, 6, 5, 17, 7, 19, 4, 18, 16, 4, 9, 8, 9, 4, 6, 7, 19, 18, 4, 12, 13, 11, 4, 19, 6]
-#ref = [14, 14, 7, 15, 15, 15, 5, 18, 7, 14, 8, 7, 10, 14, 10, 16, 7, 16, 12, 0, 4, 10, 1, 12, 4, 5, 7, 6, 14, 7, 18, 7, 10, 19, 5, 13, 8, 14, 10, 16, 10, 0, 0, 13, 7, 4, 9, 17, 14, 10, 10, 5, 19, 11, 0, 16, 8, 10, 19, 8, 8, 18, 13, 16, 16, 10, 7, 11, 15, 6, 7, 7, 6, 1, 10, 15, 1, 14, 13, 4, 5, 5, 9, 2, 5, 6, 6, 15, 11, 15, 7, 0, 4, 7, 0, 12, 7, 10, 13, 6, 16, 7, 14, 17, 6, 0, 12, 11, 12, 15, 12, 16, 9, 7, 13, 12, 10, 11, 9, 4, 6, 2, 15, 15, 7, 7, 15, 19, 4, 7, 14, 14, 0, 12, 4, 13, 14, 6, 7, 16, 6, 4, 16, 6, 15, 15, 9, 1, 5, 7, 7, 17, 4, 1, 15, 17, 18, 17, 6, 0, 6, 11, 10, 14, 6, 18, 5, 4, 17, 1, 15, 4, 10, 19, 19, 2, 7, 4, 7, 8, 15, 1, 2, 9, 8, 10, 17, 6, 6, 3, 6, 11, 14, 19, 16, 19, 4, 6, 13, 12, 13, 12, 3, 10, 7, 13, 12, 12, 8, 7, 7, 4, 7, 5, 7, 2, 0, 16, 1, 2, 7, 12, 10, 8, 16, 3, 10, 17, 11, 8, 10, 1, 18, 10, 10, 11, 12, 18, 8, 13, 6, 19, 0, 12, 18, 10, 9, 8, 10, 4, 1, 10, 15, 16, 11, 12, 6, 0, 12, 14, 18, 7, 1, 12, 4, 19, 0, 17, 3, 17, 7, 15, 3, 14, 6, 12, 6, 12, 19, 0, 10, 17, 14, 5, 9, 17, 18, 14, 6, 19, 9, 12, 12, 7, 0, 6, 11, 1, 7, 15, 4, 9, 14, 18, 10, 5, 15, 18, 11, 7, 19, 4, 11, 13, 4, 12, 1, 5, 5, 7, 9, 4, 18, 14, 4, 11, 5, 13, 5, 4, 13, 15, 15, 0, 1, 1, 14, 14, 6, 6, 9, 14, 15, 15, 5, 3, 15, 6, 0, 8, 13, 13, 13, 1, 4, 7, 10, 0, 12, 16, 18, 3, 1, 1, 18, 6, 1, 10, 8, 13, 16, 6, 15, 8, 15, 1, 10, 4, 7, 11, 13, 7, 9, 12, 9, 11, 10, 8, 11, 0, 11, 3, 14, 8, 15, 1, 15, 11, 19, 15, 14, 13, 5, 1, 16, 3, 17, 18, 16, 15, 13, 0, 11, 6, 10, 18, 16, 18, 6, 7, 16, 13, 6, 2, 0, 6, 6, 6, 9, 4, 12, 9, 10, 11, 18, 6, 11, 19, 14, 9, 9, 5, 8, 6, 1, 6, 19, 15, 7, 1, 9, 5, 13, 6, 12, 13, 19, 8, 14, 9, 0, 13, 8, 7, 13, 11, 11, 12, 8, 9, 3, 12, 7, 1, 4, 8, 6, 5, 17, 7, 19, 4, 18, 16, 4, 9, 8, 9, 4, 6, 7, 19, 18, 4, 12, 13, 11, 4, 19, 6]
+# ref = [14, 14, 7, 0, 15, 15, 5, 18, 7, 14, 8, 17, 10, 14, 10, 16, 17, 12, 16, 0, 4, 10, 1, 12, 4, 5, 7, 6, 14, 19, 18, 7, 10, 19, 5, 13, 8, 14, 10, 16, 10, 0, 0, 13, 2, 4, 9, 17, 14, 10, 10, 5, 19, 11, 0, 16, 8, 10, 19, 8, 8, 18, 13, 16, 16, 10, 7, 11, 15, 6, 19, 7, 6, 1, 10, 15, 1, 14, 13, 4, 5, 5, 9, 2, 5, 6, 14, 15, 11, 15, 7, 0, 4, 7, 0, 12, 7, 10, 13, 6, 16, 7, 14, 17, 6, 0, 12, 11, 12, 15, 12, 16, 9, 7, 13, 12, 10, 11, 9, 4, 6, 2, 15, 15, 3, 7, 15, 19, 4, 7, 14, 14, 0, 12, 4, 13, 14, 6, 7, 16, 6, 4, 16, 3, 15, 15, 9, 1, 5, 7, 15, 17, 4, 1, 15, 17, 18, 17, 5, 0, 16, 11, 10, 14, 6, 18, 5, 4, 17, 1, 15, 4, 10, 19, 19, 2, 7, 4, 3, 8, 15, 1, 2, 9, 8, 10, 17, 1, 12, 3, 2, 11, 14, 19, 16, 19, 4, 6, 13, 12, 13, 12, 3, 10, 7, 13, 12, 12, 8, 3, 3, 4, 7, 5, 7, 2, 0, 16, 1, 2, 7, 12, 10, 8, 16, 3, 10, 17, 11, 8, 10, 1, 18, 10, 0, 11, 12, 18, 8, 13, 6, 19, 0, 12, 18, 10, 9, 8, 10, 4, 1, 10, 15, 16, 11, 12, 6, 0, 12, 14, 18, 7, 1, 12, 4, 19, 0, 17, 3, 17, 7, 15, 3, 14, 6, 12, 6, 12, 19, 0, 10, 17, 14, 5, 9, 17, 18, 14, 6, 19, 9, 12, 12, 7, 0, 6, 11, 1, 7, 15, 4, 9, 14, 18, 10, 5, 15, 18, 11, 7, 19, 4, 11, 13, 4, 12, 1, 5, 5, 7, 9, 4, 18, 14, 4, 11, 5, 13, 5, 4, 13, 15, 15, 0, 1, 1, 14, 14, 6, 18, 9, 14, 15, 1, 5, 3, 17, 6, 0, 8, 9, 13, 13, 1, 4, 7, 10, 0, 12, 16, 18, 3, 1, 1, 18, 6, 1, 10, 8, 13, 16, 6, 15, 8, 2, 1, 10, 4, 7, 11, 13, 7, 9, 12, 9, 11, 10, 8, 11, 0, 3, 3, 14, 8, 15, 1, 15, 11, 19, 15, 14, 13, 5, 1, 16, 3, 17, 18, 16, 15, 13, 0, 11, 6, 10, 18, 16, 18, 6, 7, 16, 13, 6, 2, 0, 6, 6, 2, 9, 4, 12, 9, 10, 11, 18, 6, 11, 19, 14, 9, 9, 5, 8, 6, 1, 6, 19, 15, 7, 1, 9, 5, 13, 6, 12, 13, 19, 8, 14, 9, 0, 13, 8, 7, 13, 11, 11, 12, 8, 9, 3, 12, 7, 1, 4, 8, 6, 5, 17, 7, 19, 4, 18, 16, 4, 9, 8, 9, 4, 6, 7, 19, 18, 4, 12, 13, 11, 4, 19, 6]
+# ref = [14, 14, 7, 15, 15, 15, 5, 18, 7, 14, 8, 7, 10, 14, 10, 16, 7, 16, 12, 0, 4, 10, 1, 12, 4, 5, 7, 6, 14, 7, 18, 7, 10, 19, 5, 13, 8, 14, 10, 16, 10, 0, 0, 13, 7, 4, 9, 17, 14, 10, 10, 5, 19, 11, 0, 16, 8, 10, 19, 8, 8, 18, 13, 16, 16, 10, 7, 11, 15, 6, 7, 7, 6, 1, 10, 15, 1, 14, 13, 4, 5, 5, 9, 2, 5, 6, 6, 15, 11, 15, 7, 0, 4, 7, 0, 12, 7, 10, 13, 6, 16, 7, 14, 17, 6, 0, 12, 11, 12, 15, 12, 16, 9, 7, 13, 12, 10, 11, 9, 4, 6, 2, 15, 15, 7, 7, 15, 19, 4, 7, 14, 14, 0, 12, 4, 13, 14, 6, 7, 16, 6, 4, 16, 6, 15, 15, 9, 1, 5, 7, 7, 17, 4, 1, 15, 17, 18, 17, 6, 0, 6, 11, 10, 14, 6, 18, 5, 4, 17, 1, 15, 4, 10, 19, 19, 2, 7, 4, 7, 8, 15, 1, 2, 9, 8, 10, 17, 6, 6, 3, 6, 11, 14, 19, 16, 19, 4, 6, 13, 12, 13, 12, 3, 10, 7, 13, 12, 12, 8, 7, 7, 4, 7, 5, 7, 2, 0, 16, 1, 2, 7, 12, 10, 8, 16, 3, 10, 17, 11, 8, 10, 1, 18, 10, 10, 11, 12, 18, 8, 13, 6, 19, 0, 12, 18, 10, 9, 8, 10, 4, 1, 10, 15, 16, 11, 12, 6, 0, 12, 14, 18, 7, 1, 12, 4, 19, 0, 17, 3, 17, 7, 15, 3, 14, 6, 12, 6, 12, 19, 0, 10, 17, 14, 5, 9, 17, 18, 14, 6, 19, 9, 12, 12, 7, 0, 6, 11, 1, 7, 15, 4, 9, 14, 18, 10, 5, 15, 18, 11, 7, 19, 4, 11, 13, 4, 12, 1, 5, 5, 7, 9, 4, 18, 14, 4, 11, 5, 13, 5, 4, 13, 15, 15, 0, 1, 1, 14, 14, 6, 6, 9, 14, 15, 15, 5, 3, 15, 6, 0, 8, 13, 13, 13, 1, 4, 7, 10, 0, 12, 16, 18, 3, 1, 1, 18, 6, 1, 10, 8, 13, 16, 6, 15, 8, 15, 1, 10, 4, 7, 11, 13, 7, 9, 12, 9, 11, 10, 8, 11, 0, 11, 3, 14, 8, 15, 1, 15, 11, 19, 15, 14, 13, 5, 1, 16, 3, 17, 18, 16, 15, 13, 0, 11, 6, 10, 18, 16, 18, 6, 7, 16, 13, 6, 2, 0, 6, 6, 6, 9, 4, 12, 9, 10, 11, 18, 6, 11, 19, 14, 9, 9, 5, 8, 6, 1, 6, 19, 15, 7, 1, 9, 5, 13, 6, 12, 13, 19, 8, 14, 9, 0, 13, 8, 7, 13, 11, 11, 12, 8, 9, 3, 12, 7, 1, 4, 8, 6, 5, 17, 7, 19, 4, 18, 16, 4, 9, 8, 9, 4, 6, 7, 19, 18, 4, 12, 13, 11, 4, 19, 6]
 
 
-color_code = ['r', 'g', 'c', 'b', 'm', 'y', 'grey', 'pink', 'brown', 'purple', 'orange', 'burlywood', 'lime', 'navy', 'aqua', 'teal', 'fuchsia', 'olive', 'maroon', 'silver']
+color_code = ['r', 'g', 'c', 'b', 'm', 'y', 'grey', 'pink', 'brown', 'purple', 'orange', 'burlywood', 'lime', 'navy',
+              'aqua', 'teal', 'fuchsia', 'olive', 'maroon', 'silver']
 
 freq = {}
 changing_freq = {}  # {hash: frequency}
@@ -51,21 +51,21 @@ def make_hash_dic(host_ip, n):
     global hash_colour
     global hash_web
 
-    h_dic = {}   # {url: hash}
+    h_dic = {}  # {url: hash}
     kolour = color_code[:n]
-    col = {}     # {url: colour}
-    hash_colour = {}     # {hash: colour}
-    hash_web = {}   # {hash: url}
-    for i in range(1, n+1):
+    col = {}  # {url: colour}
+    hash_colour = {}  # {hash: colour}
+    hash_web = {}  # {hash: url}
+    for i in range(1, n + 1):
         url = '{}/{}.html'.format(host_ip, i)
         hash_me = 'get {} HTTP/1.0'.format(url)
         y = str.encode(hash_me)
         ha = hashlib.md5(y)
         hash_no = ha.hexdigest()
-        hash_colour[hash_no] = kolour[i-1]
+        hash_colour[hash_no] = kolour[i - 1]
         hash_web[hash_no] = url
         h_dic[url] = hash_no
-        col[url] = kolour[i-1]
+        col[url] = kolour[i - 1]
     return [h_dic, col]
 
 
@@ -130,7 +130,7 @@ def local_cache_frequency():
             d.append(i[
                          0])  # cleaning data to d = ['7e7ea8d98195d1fcf6abe4f77e56730e', '26ff04f8463191809dcd9e8605bb952a', 'd37269610dffb86e4925864b110e4d4e']
         con.close()
-        cache_dic = {}   # {hash: relative frequency}
+        cache_dic = {}  # {hash: relative frequency}
         for i in d:
             cache_dic[i] = freq[i]  # creates a dictionary and tags the hash with its relative frequency
 
@@ -176,13 +176,13 @@ def cpu_rtt():
 
 
 def calculate_mov_avg(a1):
-    ma1=[] # moving average list
-    avg1=0 # movinf average pointwise
-    count=0
+    ma1 = []  # moving average list
+    avg1 = 0  # movinf average pointwise
+    count = 0
     for i in range(len(a1)):
-        count+=1
-        avg1=((count-1)*avg1+a1[i])/count
-        ma1.append(avg1) #cumulative average formula
+        count += 1
+        avg1 = ((count - 1) * avg1 + a1[i]) / count
+        ma1.append(avg1)  # cumulative average formula
     return ma1
 
 
@@ -337,7 +337,8 @@ def update_mec_database(hash_no, path, cache_time, host_ip):
 
         c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         c.connect(mec_list[i], port, un, pw)
-        cmd = 'python3 /home/mec/files_cache/db_manage.py insert "{}" "{}" "{}" "{}"'.format(hash_no, path, cache_time, host_ip)
+        cmd = 'python3 /home/mec/files_cache/db_manage.py insert "{}" "{}" "{}" "{}"'.format(hash_no, path, cache_time,
+                                                                                             host_ip)
 
         stdin, stdout, stderr = c.exec_command(cmd)
 
@@ -370,7 +371,7 @@ def fetch_from_cache(hash_no):
             fetch_from_mec(hash_no, host_ip_list[0][0])
 
         elif len(host_ip_list) > 1:
-            max_band_ip = h_list[random.randint(0, len(h_list)-1)]
+            max_band_ip = h_list[random.randint(0, len(h_list) - 1)]
             fetch_from_mec(hash_no, max_band_ip)
 
     except sqlite3.Error as e:
@@ -549,7 +550,6 @@ def prepare_db():
 
 def delete_from_mec(min_time, host_ip):
     for i in mec_list:
-
         c = paramiko.SSHClient()
 
         un = 'mec'
@@ -570,7 +570,7 @@ def cache_performance():
     global window_size
     global re_use
     p = int((H / request_no) * 100)
-    q = int(((H+MH) / request_no) * 100)
+    q = int(((H + MH) / request_no) * 100)
     print('----------------------------------------------------------')
     print('                   Cache Performance')
     print('----------------------------------------------------------')
@@ -581,7 +581,8 @@ def cache_performance():
     print('         Total use of Replacement Algorithm = {}'.format(re_use))
     print('----------------------------------------------------------')
     cmd = "echo 'lfru{}_local_hits = {} \nlfru{}_miss = {} \nlfru{}_mec_hit = {} \n" \
-          "lfru{}_total_hit = {}' >> /home/mec/cache_result.py".format(cache_size, H, cache_size, M, cache_size, MH, cache_size, H+MH)
+          "lfru{}_total_hit = {}' >> /home/mec/cache_result.py".format(cache_size, H, cache_size, M, cache_size, MH,
+                                                                       cache_size, H + MH)
     os.system(cmd)
 
 
@@ -633,7 +634,8 @@ def getting_ready():
             print('make sure ssh is running on all MEC')
 
 
-def zipf_dist(length, maximum, zi):  # length = length of array, maximum = max number in array, zi = zipf parameter values > 1
+def zipf_dist(length, maximum,
+              zi):  # length = length of array, maximum = max number in array, zi = zipf parameter values > 1
     raw_list = numpy.random.zipf(zi, size=length)
     formated_list = [i % maximum for i in raw_list]
     count_dict = {i: formated_list.count(i) for i in set(formated_list)}
@@ -653,7 +655,7 @@ def run_me():
     n = int(input('number of web(html) contents: '))
     request_no = int(input('number of requests: '))
     zipf_param = float(input("Zipf paramter [1.1 - 2], could be float: "))
-    for i in range(1, n+1):
+    for i in range(1, n + 1):
         cmd = 'echo "{}/{}.html" >> /home/mec/temp/web_test.txt'.format(server_ip, i)
         os.system(cmd)
     result = make_hash_dic(server_ip, n)
@@ -679,7 +681,12 @@ def run_me():
             print(freq)
             cache_performance()
             os.system('rm /home/mec/temp/*')
-            cmd = "echo 'lfru{}_rtt = {} \nlfru{}_cpu = {}' >> /home/mec/cache_result.py".format(cache_size, calculate_mov_avg(x_axis), cache_size, calculate_mov_avg(y_axis))
+            cmd = "echo 'lfru{}_rtt = {} \nlfru{}_cpu = {}' >> /home/mec/cache_result.py".format(cache_size,
+                                                                                                 calculate_mov_avg(
+                                                                                                     x_axis),
+                                                                                                 cache_size,
+                                                                                                 calculate_mov_avg(
+                                                                                                     y_axis))
             os.system(cmd)
             break
         else:
