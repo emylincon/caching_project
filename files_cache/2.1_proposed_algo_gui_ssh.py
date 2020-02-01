@@ -734,7 +734,7 @@ def run_me():
     server_ip = input('web server ip: ')
     n = int(input('number of web(html) contents: '))
     request_no = int(input('number of requests: '))
-    zipf_param = int(input("Zipf paramter [1.1 - 5]: "))
+    zipf_param = float(input("Zipf paramter [1.1 - 5]: "))
     for i in range(1, n+1):
         cmd = 'echo "{}/{}.html" >> /home/mec/temp/web_test.txt'.format(server_ip, i)
         os.system(cmd)
