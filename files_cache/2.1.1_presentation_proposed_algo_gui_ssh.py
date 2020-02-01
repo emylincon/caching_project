@@ -771,6 +771,7 @@ def zipf_dist(length, maximum):  # length = length of array, maximum = max numbe
     return formated_list
 
 
+
 def run_me():
     global hash_dic
     global mec_list  # {'mec1': ip_address, 'mec3': 'ip_address'}
