@@ -50,6 +50,11 @@
 ### Note
 * if you run a script with an ssh tag on an mec, all other mecs shoudl also run an ssh tag script
 * likewise if you run a script with a multicast tag all other mecs should also run a multicast tag script
+
+
+### zipf distribution parameter
+The zipf parameter to use is 1.2 this is cited by the following article [Cooperate Caching with Multicast for Mobile Edge
+Computing in 5G Networks](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8108600)
 __________________________________________________
 #### SET UP Commands
 ```
