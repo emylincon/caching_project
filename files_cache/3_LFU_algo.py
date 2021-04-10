@@ -12,6 +12,7 @@ import random
 import time
 from pyfiglet import Figlet
 import numpy
+import  re
 
 __author__ = 'Emmanuel'
 # mec_list = ['10.1.1.1', '10.2.2.2', '10.3.3.3']
@@ -322,6 +323,26 @@ def delete_from_mec(min_time, host_ip):
         stdin, stdout, stderr = c.exec_command(cmd)
 
 
+def get_hostname():
+    cmd = ['cat /etc/hostname']
+    hostname = str(sp.check_output(cmd, shell=True), 'utf-8')[0:-1]
+    return hostname
+
+
+def save_data(no):
+    if not os.path.exists('/home/mec/output/'):
+        os.system('mkdir /home/mec/output')
+    host = get_hostname()
+    host_no = int(re.findall('[0-9]+', host)[0])
+    cmd = f"echo 'lfu{host_no}_{no}_local_hits = {H} \nlfu{host_no}_{no}_miss = {M} " \
+          f"\nlfu{host_no}_{no}_mec_hit = {MH} \n" \
+          f"lfu{host_no}_{no}_total_hit = {H + MH}' >> /home/mec/output/result{host_no}_{no}.py"
+    os.system(cmd)
+    send_path = '/home/osboxes/results/'
+    sp.run(
+        ["scp", f'/home/mec/output/result{host_no}_{no}.py', f"osboxes@{result_server_ip}:{send_path}"])
+
+
 def cache_performance():
     global H
     global M
@@ -402,10 +423,11 @@ def zipf_dist(length, maximum, zi):  # length = length of array, maximum = max n
 
 def run_me():
     global mec_list  # {'mec1': ip_address, 'mec3': 'ip_address'}
-    global request_no
+    global request_no, result_server_ip
 
     os.system('clear')
     server_ip = input('web server ip: ')
+    result_server_ip = input('Result server ip: ')
     n = int(input('number of web(html) contents: '))
     request_no = int(input('number of requests: '))
     zipf_param = float(input("Zipf paramter [1.1 - 2.1], could be float: "))
