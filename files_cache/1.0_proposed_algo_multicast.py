@@ -276,9 +276,9 @@ class Algo:
 
         ip = ip_address()
 
-        r = Database().select_hash_from_host(host_ip=ip)[0]  # This value represents how many data entries for host_ip
+        c_size = len(Database().select_hash_from_host(host_ip=ip))  # This value represents how many data entries for host_ip
 
-        if r >= self.cache_size and self.frequently_used(hash_no) == 'no':
+        if c_size >= self.cache_size and self.frequently_used(hash_no) == 'no':
             for line in stdout:
                 q = len(line) - 1
                 t = line[:q]
