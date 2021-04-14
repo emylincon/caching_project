@@ -605,12 +605,20 @@ def prepare(data):
     return my_dict
 
 
+def data_slice(no_mec, total_req_no, initial):
+    host = get_hostname()
+    host_no = int(re.findall('[0-9]+', host)[0])
+    step = int(total_req_no / no_mec)
+    start = host_no * step
+    return start + initial, start + step + initial
+
+
 def run_me():
     global mec_list  # {'mec1': ip_address, 'mec3': 'ip_address'}
     global request_no, delay
 
     os.system('clear')
-    request_no = int(input('number of requests: '))
+    total_request_no = int(input('Total number of requests: '))
     server_ip = input('web server ip: ')
     result_server = input('Result server ip: ')
     os.system('clear')
@@ -631,8 +639,10 @@ def run_me():
     input('\nEnter any key to start: ')
     with open('dataset.json') as json_file:
         data = json.load(json_file)
-
-    hist, ref = data['requests'][:-request_no], data['requests'][-request_no:]
+    start, stop = data_slice(no_mec=mec_no, total_req_no=total_request_no,
+                             initial=len(data['requests'])-total_request_no)
+    hist, ref = data['requests'][:start], data['requests'][start:stop]
+    request_no = stop-start
     cache_store.count = request_no - 1
     cache_store.history = prepare(hist)
     for ind in range(len(ref)):
