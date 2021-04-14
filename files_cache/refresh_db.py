@@ -4,7 +4,7 @@ import os
 
 def main():
     try:
-        con = sqlite3.connect('/home/mec/cache.db')
+        con = sqlite3.connect('../cache.db')
         cur = con.cursor()
         cur.executescript('''DROP TABLE IF EXISTS CacheTable;
             CREATE TABLE CacheTable(Hash varchar(30), Path varchar(70), DateTime varchar(30), Host_ip varchar(16));
@@ -39,8 +39,8 @@ def main():
             
 def clear_temp():
     try:
-        os.system('rm /home/mec/temp/*')
-        os.system('rm /home/mec/cache/*')
+        os.system('rm ../temp/*')
+        os.system('rm ../cache/*')
     except:
         print('Database is refreshed')
 
