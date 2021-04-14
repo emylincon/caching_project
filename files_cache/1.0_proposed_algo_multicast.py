@@ -147,8 +147,9 @@ class Algo:
         print('----------------------------------------------------------')
 
         cache_details = {'hits': self.hits, 'miss': self.miss, 'mec_hit': self.collaborative_hits,
-                         'total_hit_ratio':  self.hit_ratio(),
-                         'collaborative_ratio': round((self.collaborative_hits/(self.collaborative_hits+self.hits)), 4)}
+                         'total_hit_ratio': self.hit_ratio(),
+                         'collaborative_ratio': round((self.collaborative_hits / (self.collaborative_hits + self.hits)),
+                                                      4)}
         return cache_details
 
     def push(self, url):
@@ -276,7 +277,8 @@ class Algo:
 
         ip = ip_address()
 
-        c_size = len(Database().select_hash_from_host(host_ip=ip))  # This value represents how many data entries for host_ip
+        c_size = len(
+            Database().select_hash_from_host(host_ip=ip))  # This value represents how many data entries for host_ip
 
         if c_size >= self.cache_size and self.frequently_used(hash_no) == 'no':
             for line in stdout:
@@ -610,6 +612,7 @@ def run_me():
     os.system('clear')
     request_no = int(input('number of requests: '))
     server_ip = input('web server ip: ')
+    result_server = input('Result server ip: ')
     os.system('clear')
     print("getting ready to start. . .")
     initialization()
@@ -640,8 +643,8 @@ def run_me():
         delay.add_data()
         time.sleep(3)
     cache_details = cache_store.cache_performance()
-    DataObj(server_ip=server_ip).save_data(mem=mem.data_set, cpu=cpu.data_set, my_delay=delay.data_set, no=mec_no,
-                                           cache_details=cache_details)
+    DataObj(server_ip=result_server).save_data(mem=mem.data_set, cpu=cpu.data_set, my_delay=delay.data_set, no=mec_no,
+                                               cache_details=cache_details)
     os.system(f'rm {base_folder}/temp/*')
     print('Experiment Concluded!')
 
