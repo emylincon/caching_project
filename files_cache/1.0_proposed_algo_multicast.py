@@ -635,13 +635,15 @@ def run_me():
     hist, ref = data['requests'][:-request_no], data['requests'][-request_no:]
     cache_store.count = request_no - 1
     cache_store.history = prepare(hist)
-    for v in ref:
+    for ind in range(len(ref)):
+        v = ref[ind]
+        print(f'\nRequesting ({ind}/{request_no})\n')
         req = f"{server_ip}/{v + 1}.html"
         cache_store.push(req)
         cpu.add_data()
         mem.add_data()
         delay.add_data()
-        time.sleep(3)
+        time.sleep(2)
     cache_details = cache_store.cache_performance()
     DataObj(server_ip=result_server).save_data(mem=mem.data_set, cpu=cpu.data_set, my_delay=delay.data_set, no=mec_no,
                                                cache_details=cache_details)
