@@ -1,7 +1,10 @@
 import sys
 import sqlite3
- 
-conn = sqlite3.connect('/home/mec/cache.db')
+import subprocess as sp
+
+cmd = ['find /home/mec/ -name "cache.db"']
+database = str(sp.check_output(cmd, shell=True), 'utf-8').strip()
+conn = sqlite3.connect(database)
  
  
 def create():
@@ -59,4 +62,5 @@ def main(argv):
         print('Wrong Keyword: {}'.format(argv[1]))
  
  
-if __name__ == '__main__': main(sys.argv)
+if __name__ == '__main__':
+    main(sys.argv)
