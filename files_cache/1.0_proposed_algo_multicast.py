@@ -624,7 +624,8 @@ def run_me():
     os.system('clear')
     # total_request_no = int(input('Total number of requests: '))
     total_request_no = 10_002
-    server_ip = input('web server ip: ')
+    server_ip = 'competent-euler-834b51.netlify.app'
+    # server_ip = input('web server ip: ')
     result_server = input('Result server ip: ')
     os.system('clear')
     print("getting ready to start. . .")
