@@ -131,6 +131,16 @@ class Algo:
         self.window_size = window_size
         self.ssh_client = {'username': 'mec', 'password': 'password', 'port': 22}
 
+    @staticmethod
+    def request(page):
+        return f'https://competent-euler-834b51.netlify.app/pages/{page}.html'
+
+    def prepare_history(self, data):
+        history = {}
+        for j in set(data):
+            history[self.get_hash(self.request(j))] = [i for i, x in enumerate(data) if x == j]
+        self.history = history
+
     def hit_ratio(self):
         return round((((self.hits + self.collaborative_hits) / request_no) * 100), 4)
 
@@ -152,7 +162,8 @@ class Algo:
                                                       4)}
         return cache_details
 
-    def push(self, url):
+    def push(self, page_no):
+        url = self.request(page_no)
         hash_no = self.get_hash(url=url)
         self.calc_relative_freq(hash_no)  # frequency used for mec caching eviction
         self.maintain_history(hash_no)  # time update for opr prediction
@@ -598,13 +609,6 @@ class DataObj:
             time.sleep(r.uniform(1, 10))
 
 
-def prepare(data):
-    my_dict = {}
-    for j in set(data):
-        my_dict[j] = [i for i, x in enumerate(data) if x == j]
-    return my_dict
-
-
 def data_slice(no_mec, total_req_no, initial):
     host = get_hostname()
     host_no = int(re.findall('[0-9]+', host)[0])
@@ -627,7 +631,6 @@ def run_me():
     time.sleep(6)
     os.system('clear')
     g = Figlet(font='bubble')
-    base_folder = '/home/mec/caching_project'
 
     print(g.renderText('MEC CACHING PROJECT'))
     print(g.renderText('                      BY     EMEKA'))
@@ -644,12 +647,11 @@ def run_me():
     hist, ref = data['requests'][:start], data['requests'][start:stop]
     request_no = stop-start
     cache_store.count = request_no - 1
-    cache_store.history = prepare(hist)
+    cache_store.prepare_history(hist)
     for ind in range(len(ref)):
-        v = ref[ind]
+        page_no = ref[ind]
         print(f'\nRequesting ({ind}/{request_no})\n')
-        req = f"{server_ip}/{v + 1}.html"
-        cache_store.push(req)
+        cache_store.push(page_no)
         cpu.add_data()
         mem.add_data()
         delay.add_data()
@@ -657,7 +659,6 @@ def run_me():
     cache_details = cache_store.cache_performance()
     DataObj(server_ip=result_server).save_data(mem=mem.data_set, cpu=cpu.data_set, my_delay=delay.data_set, no=mec_no,
                                                cache_details=cache_details)
-    os.system(f'rm {base_folder}/temp/*')
     print('Experiment Concluded!')
 
 
