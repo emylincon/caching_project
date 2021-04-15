@@ -212,7 +212,7 @@ class Algo:
         print('-----------------------------------')
         self.miss += 1
         result = Database().update_local_database(hash_no)
-        Database().update_mec_database(*result)
+        self.update_mec_database(*result)
 
     @staticmethod
     def lfu(cache_dict):
@@ -309,7 +309,7 @@ class Algo:
                 os.system(cmd)
             cmd = 'cat {}/{}.html'.format(self.cache_folder, hash_no)
             result = Database().update_local_database(hash_no)
-            Database().update_mec_database(*result)
+            self.update_mec_database(*result)
             os.system(cmd)
             print('-----------------------------------')
             print('Cache Hit from MEC')
@@ -348,6 +348,18 @@ class Algo:
             c.connect(mec_list[i], self.ssh_client['port'], self.ssh_client['username'], self.ssh_client['password'])
             cmd = 'python3 {}/files_cache/db_manage.py del "{}" "{}" '.format(self.base_folder, hash_no, host_ip)
 
+            stdin, stdout, stderr = c.exec_command(cmd)
+
+    def update_mec_database(self, hash_no, path, cache_time, host_ip):
+        for i in mec_list:
+            c = paramiko.SSHClient()
+
+            c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            c.connect(mec_list[i], self.ssh_client['port'], self.ssh_client['username'], self.ssh_client['password'])
+            cmd = 'python3 {}/files_cache/db_manage.py insert "{}" "{}" "{}" "{}"'.format(self.base_folder, hash_no,
+                                                                                          path,
+                                                                                          cache_time,
+                                                                                          host_ip)
             stdin, stdout, stderr = c.exec_command(cmd)
 
 
@@ -449,22 +461,6 @@ class Database:
             print('Error in cache_update: {}'.format(e))
             self.con.close()
 
-    def update_mec_database(self, hash_no, path, cache_time, host_ip):
-        for i in mec_list:
-            c = paramiko.SSHClient()
-
-            un = 'mec'
-            pw = 'password'
-            port = 22
-
-            c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            c.connect(mec_list[i], port, un, pw)
-            cmd = 'python3 {}/files_cache/db_manage.py insert "{}" "{}" "{}" "{}"'.format(self.base_folder, hash_no,
-                                                                                          path,
-                                                                                          cache_time,
-                                                                                          host_ip)
-            stdin, stdout, stderr = c.exec_command(cmd)
-
 
 def get_time():
     y = strftime("%Y-%m-%d %H:%M:%S", gmtime())
@@ -544,11 +540,10 @@ def zipf_dist(length, maximum):  # length = length of array, maximum = max numbe
 
 
 class DataObj:
-    def __init__(self, server_ip):
+    def __init__(self):
         self.email = config.email_address
         self.password = config.password
         self.email_receiver = config.send_email
-        self.result_server_ip = server_ip
         self.headers = {"Authorization": f"Bearer {config.con['access_token']}"}
         self.folder = config.upload_folder
         self.google_drive = "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart"
@@ -644,9 +639,8 @@ def run_me():
     total_request_no = 10_002
     server_ip = 'competent-euler-834b51.netlify.app'
     # server_ip = input('web server ip: ')
-    result_server = input('Result server ip: ')
     os.system('clear')
-    print("getting ready to start. . .")
+    # print("getting ready to start. . .")
     initialization()
     time.sleep(2)
     os.system('clear')
@@ -655,9 +649,9 @@ def run_me():
     print(g.renderText('MEC CACHING PROJECT'))
     print(g.renderText('                      BY     EMEKA'))
     cache_store = Algo(cache_size=30, window_size=800)
-    delay = Delay(window_size=200, title='RTT', server_ip=server_ip)
-    cpu = CPU(window_size=200, title='CPU')
-    mem = Memory(window_size=200, title='MEM')
+    delay = Delay(window_size=150, title='RTT', server_ip=server_ip)
+    cpu = CPU(window_size=150, title='CPU')
+    mem = Memory(window_size=150, title='MEM')
 
     input('\nEnter any key to start: ')
     with open('dataset.json') as json_file:
@@ -668,17 +662,21 @@ def run_me():
     request_no = stop - start
     cache_store.count = request_no - 1
     cache_store.prepare_history(hist)
-    for ind in range(len(ref)):
-        page_no = ref[ind]
+    len_ref = len(ref)
+    ref_gen = (i for i in ref)
+    del data
+    del ref
+    for ind in range(len_ref):
+        page_no = ref_gen.__next__()
         print(f'\nRequesting ({ind}/{request_no})\n')
         cache_store.push(page_no)
         cpu.add_data()
         mem.add_data()
         delay.add_data()
-        time.sleep(2)
+        time.sleep(1.5)
     cache_details = cache_store.cache_performance()
-    DataObj(server_ip=result_server).save_data(mem=mem.data_set, cpu=cpu.data_set, my_delay=delay.data_set, no=mec_no,
-                                               cache_details=cache_details)
+    DataObj().save_data(mem=mem.data_set, cpu=cpu.data_set, my_delay=delay.data_set, no=mec_no,
+                        cache_details=cache_details)
     print('Experiment Concluded!')
 
 
