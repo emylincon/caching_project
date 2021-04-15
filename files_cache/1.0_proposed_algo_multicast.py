@@ -286,6 +286,7 @@ class Algo:
         cmd = 'cat {}/{}.html'.format(self.cache_folder, hash_no)
 
         stdin, stdout, stderr = c.exec_command(cmd)
+        c.close()
 
         ip = ip_address()
 
@@ -349,6 +350,7 @@ class Algo:
             cmd = 'python3 {}/files_cache/db_manage.py del "{}" "{}" '.format(self.base_folder, hash_no, host_ip)
 
             stdin, stdout, stderr = c.exec_command(cmd)
+            c.close()
 
     def update_mec_database(self, hash_no, path, cache_time, host_ip):
         for i in mec_list:
@@ -361,6 +363,7 @@ class Algo:
                                                                                           cache_time,
                                                                                           host_ip)
             stdin, stdout, stderr = c.exec_command(cmd)
+            c.close()
 
 
 class OPR:
