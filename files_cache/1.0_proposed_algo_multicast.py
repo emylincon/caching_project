@@ -21,6 +21,7 @@ import psutil
 import pickle
 import json
 import re
+import requests
 
 __author__ = 'Emmanuel'
 
@@ -548,6 +549,9 @@ class DataObj:
         self.password = config.password
         self.email_receiver = config.send_email
         self.result_server_ip = server_ip
+        self.headers = {"Authorization": f"Bearer {config.con['access_token']}"}
+        self.folder = config.upload_folder
+        self.google_drive = "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart"
 
     def send_email(self, msg):
         try:
@@ -582,6 +586,23 @@ class DataObj:
             smtp.login(self.email, self.password)
             smtp.send_message(msg)
 
+    def get_parameter(self, file):
+        return {"name": os.path.basename(file), 'parents': [self.folder]}
+
+    def file_obj(self, file, my_file):
+        return {
+            'data': ('metadata', json.dumps(self.get_parameter(file)), 'application/json; charset=UTF-8'),
+            'file': my_file
+        }
+
+    def upload_to_drive(self, file):
+        with open(file, 'rb') as my_file:
+            req = requests.post(self.google_drive,
+                                headers=self.headers,
+                                files=self.file_obj(file, my_file))
+            print(req.text)
+        print(f'uploaded {file}')
+
     def save_data(self, mem, cpu, my_delay, no, cache_details):
         host = get_hostname()
         host_no = int(re.findall('[0-9]+', host)[0])
@@ -598,14 +619,11 @@ class DataObj:
         file = open(f'results/output{host_no}_{no}.py', 'w')
         file.write(data)
         file.close()
-        send_path = '/home/osboxes/results/'
-        sp.run(
-            ["scp", f'results/output{host_no}_{no}.py', f"osboxes@{self.result_server_ip}:{send_path}"])
+        self.upload_to_drive(f'results/output{host_no}_{no}.py')
+
         for res in ['MEM', 'CPU', 'RTT']:
             os.system(f'zip results/{res}{host_no}_{no}.zip results/{res}/*')
-            sp.run(
-                ["scp", f'results/{res}{host_no}_{no}.zip', f"osboxes@{self.result_server_ip}:{send_path}"])
-            self.send_email_attachment(f'results/{res}{host_no}_{no}.zip')
+            self.upload_to_drive(f'results/{res}{host_no}_{no}.zip')
             time.sleep(r.uniform(1, 10))
 
 
@@ -645,9 +663,9 @@ def run_me():
     with open('dataset.json') as json_file:
         data = json.load(json_file)
     start, stop = data_slice(no_mec=mec_no, total_req_no=total_request_no,
-                             initial=len(data['requests'])-total_request_no)
+                             initial=len(data['requests']) - total_request_no)
     hist, ref = data['requests'][:start], data['requests'][start:stop]
-    request_no = stop-start
+    request_no = stop - start
     cache_store.count = request_no - 1
     cache_store.prepare_history(hist)
     for ind in range(len(ref)):
