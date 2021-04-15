@@ -379,10 +379,11 @@ class OPR:
         lin_reg = LinearRegression()
         lin_reg.fit(feature_poly, target.reshape(-1, 1))
         my_pred = lin_reg.predict(feature_poly)
-        print('Prediction score => ', r2_score(target, my_pred))
+        # print('Prediction score => ', r2_score(target, my_pred))
         return lin_reg.predict(to_predict)[0][0]
 
     def find_victim(self):
+        print('-'*30+'\nOPR Replacement\n'+'-'*30)
         predicted = {cache: self.predict(self.cache_dict[cache]) for cache in self.cache_dict}
         victim = max(predicted.keys(), key=(lambda k: predicted[k]))
         return victim
@@ -448,11 +449,11 @@ class Database:
             data = (hash_no, path, cache_time, ip)
             self.cur.execute("INSERT INTO CacheTable VALUES(?, ?, ?, ?)", data)
             self.con.commit()
-            self.cur.execute("SELECT * FROM CacheTable")
-            d = self.cur.fetchall()
-
-            for row in d:
-                print(row)
+            # self.cur.execute("SELECT * FROM CacheTable")
+            # d = self.cur.fetchall()
+            #
+            # for row in d:
+            #     print(row)
             result = (hash_no, path, cache_time, ip)
             self.con.close()
             return result
@@ -666,13 +667,20 @@ def run_me():
     ref_gen = (i for i in ref)
     del data
     del ref
+    pid = os.getpid()
     for ind in range(len_ref):
         page_no = ref_gen.__next__()
-        print(f'\nRequesting ({ind}/{request_no})\n')
         cache_store.push(page_no)
         cpu.add_data()
         mem.add_data()
         delay.add_data()
+        print('files opened')
+        os.system(f'ls -l /proc/{pid}/fd')
+        print('-'*50)
+        print('no of files opened')
+        os.system(f'ls -l /proc/{pid}/fd | wc -l')
+        print('-' * 50)
+        print(f'\nRequested ({ind}/{request_no})\n')
         time.sleep(1.5)
     cache_details = cache_store.cache_performance()
     DataObj().save_data(mem=mem.data_set, cpu=cpu.data_set, my_delay=delay.data_set, no=mec_no,
