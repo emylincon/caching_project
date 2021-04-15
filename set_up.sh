@@ -19,7 +19,7 @@ apt install nano -y
 apt install iperf3 -y
 apt install nmap -y
 
-pip3 -r requirements.txt
+pip3 install -r requirements.txt
 
 python3 files_cache/refresh_db.py
 /etc/init.d/ssh start
