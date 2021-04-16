@@ -93,6 +93,7 @@ class Records:
 
     def update(self):
         data = (self.get_memory(), self.get_cpu(), self.get_rtt())
+        self.count += 1
         record_database.insert(*data)
 
     @staticmethod
@@ -194,10 +195,25 @@ class Algo:
         self.degree = degree
         self.window_size = window_size
         self.ssh_client = {'username': 'mec', 'password': 'password', 'port': 22}
+        self.host_ip = mec_me['ip']
 
     @staticmethod
     def request(page):
         return f'https://competent-euler-834b51.netlify.app/pages/{page}.html'
+
+    def test(self):
+        res = Database().select_hash_from_host(self.host_ip)
+        files = [f'{i[0]}.html' for i in res]
+        cmd = ['ls /home/mec/caching_project/cache']
+        out = str(sp.check_output(cmd, shell=True), 'utf-8').strip().split('\n')
+        if sorted(files) == sorted(out):
+            print('-' * 100 + 'passed' + '-' * 100)
+            return True
+        else:
+            print('-' * 100 + 'failed' + '-' * 100)
+            print(f'db = {sorted(files)}')
+            print(f'folder = {sorted(out)}')
+            return False
 
     def prepare_history(self, data):
         history = {}
@@ -259,6 +275,7 @@ class Algo:
         result = Database().select_hash_count(hash_no)[0]  # is cache in cache_store
         if result == 0:
             self.fetch_from_source(hash_no, url)
+            print('fetching from source')
         else:
             self.fetch_from_cache(hash_no)
 
@@ -287,18 +304,17 @@ class Algo:
         print(f"Replaced using LRU -> victim -> {victim}")
         return victim
 
-    def evict_hash(self, host_ip, hash_no, hash_time=None):
-        self.delete_least_frequent_mec(hash_no, host_ip)
+    def evict_hash(self, hash_no, hash_time=None):
+        self.delete_least_frequent_mec(hash_no)
         if hash_time is None:
-            Database().delete_row_with_hash(host_ip=host_ip, hash_no=hash_no)
+            Database().delete_row_with_hash(host_ip=self.host_ip, hash_no=hash_no)
         else:
-            Database().delete_row_with_time(host_ip=host_ip, hash_time=hash_time)
+            Database().delete_row_with_time(host_ip=self.host_ip, hash_time=hash_time)
         cmd = 'rm {}/{}.html'.format(self.cache_folder, hash_no)
         os.system(cmd)
 
     def maintain_cache_size(self):  # cache_full? replace and update
-        host_ip = mec_me['ip']
-        data = Database().select_hash_from_host(host_ip)
+        data = Database().select_hash_from_host(self.host_ip)
         if len(data) >= self.cache_size:
             cache_dict = {pod[0]: self.history[pod[0]] for pod in data}
             min_key = min(cache_dict.keys(), key=(lambda k: len(cache_dict[k])))
@@ -306,10 +322,10 @@ class Algo:
             # the minimum length of list > 4 is the condition #  for using polynomial of degree 3 for prediction
             if min_len > self.degree + 1:
                 max_hash = OPR(degree=self.degree, cache_dict=cache_dict).find_victim()
-                self.evict_hash(hash_no=max_hash, host_ip=host_ip)
+                self.evict_hash(hash_no=max_hash)
             else:
                 min_time_hash = self.lru(cache_dict=cache_dict)
-                self.evict_hash(host_ip=host_ip, hash_no=min_time_hash)
+                self.evict_hash(hash_no=min_time_hash)
 
     def fetch_from_cache(self, hash_no):
         hosts = Database().select_host_ip_with_hash(hash_no)
@@ -380,9 +396,7 @@ class Algo:
             print('-----------------------------------')
 
     def frequently_used(self, hash_no):
-        host_ip = mec_me['ip']
-
-        host_ip_list = Database().select_hash_from_host(host_ip=host_ip)  # [('13r2fcerf3f',), ('1ed2d32c2d2x',)]
+        host_ip_list = Database().select_hash_from_host(host_ip=self.host_ip)  # [('13r2fcerf3f',), ('1ed2d32c2d2x',)]
 
         fre_li = {pod[0]: self.freq[pod[0]] for pod in host_ip_list}
         min_freq = self.lfu(fre_li)  # returns hash with min frequency
@@ -393,29 +407,29 @@ class Algo:
             # checks if 2 or more hash have the same min hash value
             a = [i for i in fre_li if fre_li[i] == fre_li[min_freq]]
             if len(a) == 1:  # if min frequency value is unique to only 1 hash
-                self.evict_hash(hash_no=min_freq, host_ip=host_ip)
+                self.evict_hash(hash_no=min_freq)
                 return 'yes'
             else:  # if min frequency value is not unique to only 1
                 s = tuple(a)
                 # returns array that looks like [('123a11', '12:00'), ('111b2b', '11:11'), ('222b2b', '11:13')]
-                data = Database().select_hash_datetime(host_ip=host_ip, hashes=s)
+                data = Database().select_hash_datetime(host_ip=self.host_ip, hashes=s)
                 b = dict(data)
                 min_time_hash = min(b, key=b.get)  # returns the hash wih the min frequency and min time
-                self.evict_hash(host_ip=host_ip, hash_no=min_time_hash)
+                self.evict_hash(hash_no=min_time_hash)
                 return 'yes'
 
-    def delete_least_frequent_mec(self, hash_no, host_ip):
+    def delete_least_frequent_mec(self, hash_no):
         for i in mec_list:
             c = paramiko.SSHClient()
 
             c.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             c.connect(mec_list[i], self.ssh_client['port'], self.ssh_client['username'], self.ssh_client['password'])
-            cmd = 'python3 {}/files_cache/db_manage.py del "{}" "{}" '.format(self.base_folder, hash_no, host_ip)
+            cmd = 'python3 {}/files_cache/db_manage.py del "{}" "{}" '.format(self.base_folder, hash_no, self.host_ip)
 
             stdin, stdout, stderr = c.exec_command(cmd)
             c.close()
 
-    def update_mec_database(self, hash_no, path, cache_time, host_ip):
+    def update_mec_database(self, hash_no, path, cache_time):
         for i in mec_list:
             c = paramiko.SSHClient()
 
@@ -424,7 +438,7 @@ class Algo:
             cmd = 'python3 {}/files_cache/db_manage.py insert "{}" "{}" "{}" "{}"'.format(self.base_folder, hash_no,
                                                                                           path,
                                                                                           cache_time,
-                                                                                          host_ip)
+                                                                                          self.host_ip)
             stdin, stdout, stderr = c.exec_command(cmd)
             c.close()
 
@@ -449,7 +463,7 @@ class OPR:
         return lin_reg.predict(to_predict)[0][0]
 
     def find_victim(self):
-        print('-'*30+'\nOPR Replacement\n'+'-'*30)
+        print('-' * 30 + '\nOPR Replacement\n' + '-' * 30)
         predicted = {cache: self.predict(self.cache_dict[cache]) for cache in self.cache_dict}
         victim = max(predicted.keys(), key=(lambda k: predicted[k]))
         return victim
@@ -521,7 +535,7 @@ class Database:
             #
             # for row in d:
             #     print(row)
-            result = (hash_no, path, cache_time, ip)
+            result = (hash_no, path, cache_time)
             self.con.close()
             return result
 
@@ -756,9 +770,12 @@ def run_me():
         # cpu.add_data()
         # mem.add_data()
         # delay.add_data()
-        print('-'*50)
+        print('-' * 50)
         print(f'\nRequested ({ind}/{request_no})\n')
         print('-' * 50)
+        if not cache_store.test():
+            print('Error occured. \nPrograming Terminating')
+            break
         time.sleep(1.5)
     cache_details = cache_store.cache_performance()
     # DataObj().save_data(mem=mem.data_set, cpu=cpu.data_set, my_delay=delay.data_set, no=mec_no,
