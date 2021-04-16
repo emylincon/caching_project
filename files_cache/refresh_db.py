@@ -1,10 +1,14 @@
 import sqlite3
 import os
+import subprocess as sp
+
+cmd = ['find /home/mec/ -name "cache.db"']
+database = str(sp.check_output(cmd, shell=True), 'utf-8').strip()
 
 
 def main():
     try:
-        con = sqlite3.connect('../cache.db')
+        con = sqlite3.connect(database)
         cur = con.cursor()
         cur.executescript('''DROP TABLE IF EXISTS CacheTable;
             CREATE TABLE CacheTable(Hash varchar(30), Path varchar(70), DateTime varchar(30), Host_ip varchar(16));
@@ -41,8 +45,8 @@ def clear_temp():
     try:
         os.system('rm ../temp/*')
         os.system('rm ../cache/*')
-    except:
-        print('Database is refreshed')
+    except Exception as e:
+        print('Database is refreshed! \n{}'.format(e))
 
 
 if __name__ == "__main__":
