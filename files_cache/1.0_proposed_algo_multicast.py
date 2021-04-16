@@ -431,6 +431,7 @@ class Database:
         self.cur.execute(
             "update CacheTable set DateTime = '" + hash_time + "' where Hash = '" + hash_no + "' and Host_ip = '"
             + mec_me['ip'] + "';")
+        self.con.commit()
         self.con.close()
 
     def delete_row_with_hash(self, hash_no, host_ip):
@@ -670,20 +671,15 @@ def run_me():
     ref_gen = (i for i in ref)
     del data
     del ref
-    pid = os.getpid()
     for ind in range(len_ref):
         page_no = ref_gen.__next__()
         cache_store.push(page_no)
         cpu.add_data()
         mem.add_data()
         delay.add_data()
-        print('files opened')
-        os.system(f'ls -l /proc/{pid}/fd')
         print('-'*50)
-        print('no of files opened')
-        os.system(f'ls -l /proc/{pid}/fd | wc -l')
-        print('-' * 50)
         print(f'\nRequested ({ind}/{request_no})\n')
+        print('-' * 50)
         time.sleep(1.5)
     cache_details = cache_store.cache_performance()
     DataObj().save_data(mem=mem.data_set, cpu=cpu.data_set, my_delay=delay.data_set, no=mec_no,
