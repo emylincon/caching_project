@@ -23,5 +23,4 @@ pip3 install -r requirements.txt
 
 python3 files_cache/refresh_db.py
 /etc/init.d/ssh start
-clear
 echo 'All done.. Ready to use!'
