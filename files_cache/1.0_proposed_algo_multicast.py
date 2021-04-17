@@ -626,9 +626,24 @@ class DataObj:
         self.email = config.email_address
         self.password = config.password
         self.email_receiver = config.send_email
-        self.headers = {"Authorization": f"Bearer {config.con['access_token']}"}
         self.folder = config.upload_folder
         self.google_drive = "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart"
+
+    @staticmethod
+    def refresh_token():
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        url = 'https://oauth2.googleapis.com/token'
+        my_data = {'client_id': config.con['client_id'],
+                   'client_secret': config.con['client_secret'],
+                   'refresh_token': config.con['refresh_token'],
+                   'grant_type': 'refresh_token'}
+
+        response = requests.post(url=url, headers=headers, data=my_data)
+        obj = response.json()
+        return obj['access_token']
+
+    def get_headers(self):
+        return {"Authorization": f"Bearer {self.refresh_token()}"}
 
     def send_email(self, msg):
         try:
@@ -675,7 +690,7 @@ class DataObj:
     def upload_to_drive(self, file):
         with open(file, 'rb') as my_file:
             req = requests.post(self.google_drive,
-                                headers=self.headers,
+                                headers=self.get_headers(),
                                 files=self.file_obj(file, my_file))
             print(req.text)
         print(f'uploaded {file}')
