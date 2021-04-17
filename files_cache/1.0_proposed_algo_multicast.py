@@ -362,32 +362,27 @@ class Algo:
         cmd = 'cat {}/{}.html'.format(self.cache_folder, hash_no)
 
         stdin, stdout, stderr = c.exec_command(cmd)
-        c.close()
-
+        out, err = stdout.read().decode(encoding='utf-8'), stderr.read().decode(encoding='utf-8')
         ip = ip_address()
 
         c_size = len(
             Database().select_hash_from_host(host_ip=ip))  # This value represents how many data entries for host_ip
 
         if c_size >= self.cache_size and self.frequently_used(hash_no) == 'no':
-            for line in stdout:
-                q = len(line) - 1
-                t = line[:q]
-                print(t)
+            print(out)
             print('-----------------------------------')
             print('Hit from MEC Not Cached')
             print('-----------------------------------')
 
         else:
             print('-'*50+'saving from mec'+'-'*50)
-            for line in stdout:
-                q = len(line) - 1
-                t = line[:q]
-                print(t)
-                cmd = "echo '{}' >> {}/{}.html".format(t, self.cache_folder, hash_no)
-                os.system(cmd)
+            with open("{}/{}.html".format(self.cache_folder, hash_no), "w") as my_file:
+                print('------------output------------------')
+                print(out)
+                print('------------output------------------')
+                my_file.write(out)
             print('-' * 50 + 'saving from mec complete' + '-' * 50)
-            print('if error mec -> ', stderr)
+            print('if error mec -> ', err)
             cmd = 'cat {}/{}.html'.format(self.cache_folder, hash_no)
             result = Database().update_local_database(hash_no)
             self.update_mec_database(*result)
@@ -395,6 +390,7 @@ class Algo:
             print('-----------------------------------')
             print('Cache Hit from MEC')
             print('-----------------------------------')
+        c.close()
 
     def frequently_used(self, hash_no):
         host_ip_list = Database().select_hash_from_host(host_ip=self.host_ip)  # [('13r2fcerf3f',), ('1ed2d32c2d2x',)]
@@ -771,6 +767,8 @@ def run_me():
     # mem = Memory(window_size=150, title='MEM')
 
     input('\nEnter any key to start: ')
+    print(f'mec_list- >', mec_list)
+    time.sleep(2)
     with open('dataset.json') as json_file:
         data = json.load(json_file)
     start, stop = data_slice(no_mec=mec_no, total_req_no=total_request_no,
