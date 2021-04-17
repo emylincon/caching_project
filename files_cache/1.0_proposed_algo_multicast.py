@@ -40,9 +40,6 @@ group = socket.inet_aton(multicast_group)
 mreq = struct.pack('4sL', group, socket.INADDR_ANY)
 sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
-util_db_name = 'util.db'
-record_database = Utilization.Database(name=util_db_name)
-
 
 class Records:
     system = psutil.Process(os.getpid())
@@ -382,11 +379,15 @@ class Algo:
             print('-----------------------------------')
 
         else:
+            print('-'*50+'saving from mec'+'-'*50)
             for line in stdout:
                 q = len(line) - 1
                 t = line[:q]
+                print(t)
                 cmd = "echo '{}' >> {}/{}.html".format(t, self.cache_folder, hash_no)
                 os.system(cmd)
+            print('-' * 50 + 'saving from mec complete' + '-' * 50)
+            print('if error mec -> ', stderr)
             cmd = 'cat {}/{}.html'.format(self.cache_folder, hash_no)
             result = Database().update_local_database(hash_no)
             self.update_mec_database(*result)
@@ -718,7 +719,7 @@ class DataObj:
             self.upload_to_drive(f'results/{res}{host_no}_{no}.zip')
             time.sleep(r.uniform(1, 10))
 
-    def save_db(self, no, cache_details):
+    def save_db(self, no, cache_details, util_db_name):
         host = get_hostname()
         host_no = int(re.findall('[0-9]+', host)[0])
         data = '\n'
@@ -743,7 +744,7 @@ def data_slice(no_mec, total_req_no, initial):
 
 def run_me():
     global mec_list  # {'mec1': ip_address, 'mec3': 'ip_address'}
-    global request_no
+    global request_no, record_database
 
     os.system('clear')
     # total_request_no = int(input('Total number of requests: '))
@@ -760,6 +761,10 @@ def run_me():
 
     print(g.renderText('MEC CACHING PROJECT'))
     print(g.renderText('                      BY     EMEKA'))
+    host = get_hostname()
+    host_no = int(re.findall('[0-9]+', host)[0])
+    util_db_name = f'util{host_no}_{mec_no}.db'
+    record_database = Utilization.Database(name=util_db_name)
     cache_store = Algo(cache_size=30, window_size=800)
     # delay = Delay(window_size=150, title='RTT', server_ip=server_ip)
     # cpu = CPU(window_size=150, title='CPU')
@@ -795,7 +800,7 @@ def run_me():
     cache_details = cache_store.cache_performance()
     # DataObj().save_data(mem=mem.data_set, cpu=cpu.data_set, my_delay=delay.data_set, no=mec_no,
     #                     cache_details=cache_details)
-    DataObj().save_db(no=mec_no, cache_details=cache_details)
+    DataObj().save_db(no=mec_no, cache_details=cache_details, util_db_name=util_db_name)
     print('Experiment Concluded!')
 
 
