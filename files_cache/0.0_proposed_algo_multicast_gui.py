@@ -23,6 +23,11 @@ import json
 import re
 import requests
 import Utilization
+from drawnow import *
+import matplotlib.pyplot as plt
+import matplotlib
+
+matplotlib.use('TkAgg')
 
 __author__ = 'Emmanuel'
 
@@ -39,6 +44,72 @@ sock.bind(server_address)
 group = socket.inet_aton(multicast_group)
 mreq = struct.pack('4sL', group, socket.INADDR_ANY)
 sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+
+
+class Display:
+    def __init__(self):
+        self.fig = plt.figure()
+        self.cpu = self.fig.add_subplot(221)
+        self.mem = self.fig.add_subplot(222)
+        self.rtt = self.fig.add_subplot(223)
+        self.cache = self.fig.add_subplot(224)
+        self.util = {'Memory': self.mem, 'CPU': self.cpu, 'RTT': self.rtt}
+        self.col = {'Memory': 'r', 'CPU': 'g', 'RTT': 'b'}
+        self.temp = {}, {}
+        # ['Id', 'Memory', 'CPU', 'RTT']
+
+    def plot_util(self, x, y, title):
+        ax = self.util[title]
+        col = self.col[title]
+        ax.grid(True)
+        ax.plot(x, y, linewidth=2, label=title, color=col)
+        ax.set_ylabel(title)
+        ax.set_xlabel('No of Samples')
+        ax.fill_between(x, y, 0, alpha=0.5, color=col)
+        ax.legend()
+        ax.set_title(f'{title} Utilization over Time')
+        plt.subplot(ax)
+
+    @staticmethod
+    def percent(value, total):
+        if value > 0:
+            return round((value / total) * 100, 2)
+        else:
+            return 0
+
+    def plot_cache(self, data):
+        keys = ['Hit', 'Miss', 'M-Hit']
+        total = sum(data.values)
+
+        val = [self.percent(data['hits'], total),
+               self.percent(data['miss'], total),
+               self.percent(data['mec_hit'], total)]
+        cols = ['g', 'r', 'b']
+        ypos = ([0, 1, 2])
+
+        values = [data['hits'], data['miss'], data['mec_hit']]
+        for i in values:
+            j = values.index(i)
+            self.cache.text(j - 0.1, values[j], '{}%'.format(val[j]), rotation=0,
+                            ha="center", va="center",
+                            bbox=dict(boxstyle="round", ec=(1., 0.5, 0.5), fc=(1., 0.8, 0.8), ))
+        self.cache.set_xticks(ypos)
+        self.cache.set_xticklabels(keys)
+        self.cache.bar(ypos, values, align='center', color=cols, alpha=0.3)
+        self.cache.set_title('Cache Performance')
+        plt.subplot(self.cache)
+
+    def trigger_plot(self, util: dict, cache: dict):
+        self.temp = util, cache
+        drawnow(self.__plot)
+
+    def __plot(self):
+        util, cache = self.temp
+        self.plot_cache(data=cache)
+        x = util.pop('Id')
+        for title in util:
+            self.plot_util(x=x, y=util[title], title=title)
+        self.fig.suptitle('MEC Performance During Caching Experiment')
 
 
 class Records:
@@ -95,6 +166,9 @@ class Records:
 
     @staticmethod
     def fetch_data(limit=200):
+        """
+        data format = ['Id', 'Memory', 'CPU', 'RTT']
+        """
         return record_database.select_limit(limit=limit)
 
 
@@ -193,6 +267,9 @@ class Algo:
         self.window_size = window_size
         self.ssh_client = {'username': 'mec', 'password': 'password', 'port': 22}
         self.host_ip = mec_me['ip']
+
+    def get_cache_performance(self):
+        return {'hits': self.hits, 'miss': self.miss, 'mec_hit': self.collaborative_hits}
 
     @staticmethod
     def request(page):
@@ -748,6 +825,7 @@ def run_me():
     time.sleep(2)
     os.system('clear')
     g = Figlet(font='bubble')
+    my_display = Display()
 
     print(g.renderText('MEC CACHING PROJECT'))
     print(g.renderText('                      BY     EMEKA'))
@@ -756,9 +834,6 @@ def run_me():
     util_db_name = f'util{host_no}_{mec_no}.db'
     record_database = Utilization.Database(name=util_db_name)
     cache_store = Algo(cache_size=30, window_size=800)
-    # delay = Delay(window_size=150, title='RTT', server_ip=server_ip)
-    # cpu = CPU(window_size=150, title='CPU')
-    # mem = Memory(window_size=150, title='MEM')
 
     input('\nEnter any key to start: ')
     print(f'mec_list- >', mec_list)
@@ -779,19 +854,17 @@ def run_me():
         page_no = ref_gen.__next__()
         cache_store.push(page_no)
         my_record.update()
-        # cpu.add_data()
-        # mem.add_data()
-        # delay.add_data()
         print('-' * 50)
         print(f'\nRequested ({ind}/{request_no})\n')
         print('-' * 50)
+        util = my_record.fetch_data()
+        cache_d = cache_store.get_cache_performance()
+        my_display.trigger_plot(util=util, cache=cache_d)
         if not cache_store.test():
             print('Error occured. \nPrograming Terminating')
             break
         time.sleep(1.5)
     cache_details = cache_store.cache_performance()
-    # DataObj().save_data(mem=mem.data_set, cpu=cpu.data_set, my_delay=delay.data_set, no=mec_no,
-    #                     cache_details=cache_details)
     DataObj().save_db(no=mec_no, cache_details=cache_details, util_db_name=util_db_name)
     print('Experiment Concluded!')
 
