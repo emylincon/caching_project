@@ -815,8 +815,8 @@ def run_me():
 
     os.system('clear')
     # total_request_no = int(input('Total number of requests: '))
-    # total_request_no = 10_002
-    total_request_no = 100
+    total_request_no = 10_002
+    # total_request_no = 100
     server_ip = 'competent-euler-834b51.netlify.app'
     # server_ip = input('web server ip: ')
     os.system('clear')
