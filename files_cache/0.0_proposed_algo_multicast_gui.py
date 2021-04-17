@@ -79,7 +79,7 @@ class Display:
 
     def plot_cache(self, data):
         keys = ['Hit', 'Miss', 'M-Hit']
-        total = sum(data.values)
+        total = sum(data.values())
 
         val = [self.percent(data['hits'], total),
                self.percent(data['miss'], total),
