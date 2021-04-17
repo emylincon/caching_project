@@ -37,7 +37,7 @@ class Database:
             con, cur = self.get_con()
             cur.execute(f"SELECT rowid, Memory, CPU, RTT FROM Utilization LIMIT {limit} OFFSET {offset};")
             data = cur.fetchall()
-            self.display(data)
+            # self.display(data)
             con.close()
             return self.format_data(data)
 
@@ -48,13 +48,13 @@ class Database:
 
     def format_data(self, data):
         df = pd.DataFrame(data, columns=self.columns)
-        return df.to_dict()
+        return df.to_dict('list')
 
     def select_all(self):
         con, cur = self.get_con()
         cur.execute("SELECT rowid, Memory, CPU, RTT FROM Utilization")
         data = cur.fetchall()
-        self.display(data)
+        # self.display(data)
         con.close()
         return self.format_data(data)
 
@@ -64,6 +64,8 @@ class Database:
 #     a = tuple([round(r.uniform(20,50),3) for j in range(3)])
 #     db.insert(*a)
 #
-# db.select_all()
+# f = db.select_all()
+# print(f)
 # print('-'*100)
-# db.select_limit(limit=5)
+# f = db.select_limit(limit=5)
+# print(f)
