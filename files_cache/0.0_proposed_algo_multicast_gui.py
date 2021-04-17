@@ -61,6 +61,7 @@ class Display:
     def plot_util(self, x, y, title):
         ax = self.util[title]
         col = self.col[title]
+        print(x, y, title, col)
         ax.grid(True)
         ax.plot(x, y, linewidth=2, label=title, color=col)
         ax.set_ylabel(title)
