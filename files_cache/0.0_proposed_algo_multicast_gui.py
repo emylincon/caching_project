@@ -27,7 +27,7 @@ from drawnow import *
 import matplotlib.pyplot as plt
 import matplotlib
 
-matplotlib.use('TkAgg')
+# matplotlib.use('TkAgg')
 
 __author__ = 'Emmanuel'
 
