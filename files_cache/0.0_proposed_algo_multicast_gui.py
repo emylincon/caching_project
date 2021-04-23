@@ -55,7 +55,6 @@ class Display:
         self.cache = self.fig.add_subplot(224)
         self.util = {'Memory': self.mem, 'CPU': self.cpu, 'RTT': self.rtt}
         self.col = {'Memory': 'r', 'CPU': 'g', 'RTT': 'b'}
-        self.temp = {}, {}
         # ['Id', 'Memory', 'CPU', 'RTT']
 
     def plot_util(self, x, y, title):
@@ -100,16 +99,14 @@ class Display:
         plt.subplot(self.cache)
 
     def trigger_plot(self, util: dict, cache: dict):
-        self.temp = util, cache
-        drawnow(self.__plot)
+        def plot():
+            self.plot_cache(data=cache)
+            x = util.pop('Id')
+            for title in util:
+                self.plot_util(x=x, y=util[title], title=title)
+            self.fig.suptitle('MEC Performance During Caching Experiment')
 
-    def __plot(self):
-        util, cache = self.temp
-        self.plot_cache(data=cache)
-        x = util.pop('Id')
-        for title in util:
-            self.plot_util(x=x, y=util[title], title=title)
-        self.fig.suptitle('MEC Performance During Caching Experiment')
+        drawnow(plot)
 
 
 class Records:
