@@ -7,7 +7,7 @@ kiwisolver==1.3.1
 matplotlib==3.3.4
 numpy==1.19.5
 paramiko==2.10.1
-Pillow==8.2.0
+Pillow==9.3.0
 psutil==5.8.0
 pycparser==2.20
 pyfiglet==0.8.post1
