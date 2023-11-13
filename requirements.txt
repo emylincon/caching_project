@@ -1,6 +1,6 @@
 bcrypt==3.2.0
 cffi==1.14.5
-cryptography==3.4.7
+cryptography==39.0.1
 cycler==0.10.0
 drawnow==0.72.5
 kiwisolver==1.3.1
