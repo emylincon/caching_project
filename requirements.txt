@@ -5,7 +5,7 @@ cycler==0.10.0
 drawnow==0.72.5
 kiwisolver==1.3.1
 matplotlib==3.3.4
-numpy==1.19.5
+numpy==1.22.0
 paramiko==2.10.1
 Pillow==8.2.0
 psutil==5.8.0
